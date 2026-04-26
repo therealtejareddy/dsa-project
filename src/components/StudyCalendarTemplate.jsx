@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../contexts/AuthContext'
-import { saveCalendarStatus, getCalendarStatus, saveCompletedProblems, getCompletedProblems } from '../services/firestoreService'
+import { saveCalendarStatus, getCalendarStatus, saveCompletedProblems, getCompletedProblems, saveProblemNote as saveProblemNoteToFB, getProblemNote as getProblemNoteFromFB, getPatternProblems } from '../services/firestoreService'
 import { resolveProblems } from '../utils/problems'
 
 export const CATEGORY_COLORS = {
@@ -102,12 +102,29 @@ export default function StudyCalendarTemplate({
         try {
           setLoading(true)
           const calendarId = String(totalDays)
-          const [savedDays, savedProblems] = await Promise.all([
+          const [savedDays, savedProblems, allProblemNotes, allDayNotes] = await Promise.all([
             getCalendarStatus(user.uid, calendarId),
             getCompletedProblems(user.uid),
+            getPatternProblems(user.uid, 'calendar'),
+            getPatternProblems(user.uid, 'dayNotes'),
           ])
           setCompletedDays(savedDays)
           setCompletedProblems(savedProblems)
+          // Convert problem notes array to object format
+          const problemNotesObj = {}
+          allProblemNotes.forEach(pn => {
+            problemNotesObj[pn.id] = pn.userNote || ''
+          })
+          setProblemNotes(problemNotesObj)
+          // Convert day notes array to object format (filter by current calendar)
+          const dayNotesObj = {}
+          allDayNotes.forEach(dn => {
+            // Only include notes for this calendar (e.g., '30-1', '30-2' for 30-day calendar)
+            if (dn.id.startsWith(`${calendarId}-`)) {
+              dayNotesObj[dn.id] = dn.userNote || ''
+            }
+          })
+          setDayNotes(dayNotesObj)
         } catch (error) {
           console.error('Failed to load calendar progress:', error)
           // Continue without Firebase sync
@@ -218,6 +235,15 @@ export default function StudyCalendarTemplate({
       ...prev,
       [editingNoteId]: noteText,
     }))
+    // Persist to Firestore using existing function
+    if (user) {
+      saveProblemNoteToFB(user.uid, 'calendar', {
+        id: editingNoteId,
+        title: editingNoteId,
+        userNote: noteText,
+        completed: false,
+      }).catch(e => console.error('Failed to save problem note:', e))
+    }
     setEditingNoteId(null)
     setNoteText('')
   }
@@ -225,19 +251,30 @@ export default function StudyCalendarTemplate({
   const openDayNoteEditor = (day) => {
     setSelectedDay(day)
     setEditingDayNote(true)
-    setDayNoteText(dayNotes[day] || '')
+    const dayKey = getDayNoteKey(day)
+    setDayNoteText(dayNotes[dayKey] || '')
   }
 
   const saveDayNote = () => {
+    const dayKey = getDayNoteKey(selectedDay)
     setDayNotes(prev => ({
       ...prev,
-      [selectedDay]: dayNoteText,
+      [dayKey]: dayNoteText,
     }))
+    // Persist to Firestore using existing function
+    if (user) {
+      saveProblemNoteToFB(user.uid, 'dayNotes', {
+        id: dayKey,
+        title: `Calendar ${totalDays} - Day ${selectedDay}`,
+        userNote: dayNoteText,
+        completed: false,
+      }).catch(e => console.error('Failed to save day note:', e))
+    }
     setEditingDayNote(false)
     setDayNoteText('')
   }
 
-  const getProblemKey = (dayNum, problemIndex) => `day-${dayNum}-prob-${problemIndex}`
+  const getDayNoteKey = (dayNum) => `${totalDays}-${dayNum}`
 
   const completedCount = completedDays.size
   const progressPercent = Math.round((completedCount / totalDays) * 100)
@@ -487,7 +524,7 @@ export default function StudyCalendarTemplate({
                     {selectedDayEntry.problems.map((p, i) => {
                       const catColor = CATEGORY_COLORS[p.category]
                       const diffColor = DIFF_COLOR[p.difficulty]
-                      const problemKey = getProblemKey(selectedDayEntry.day, i)
+                      const problemKey = String(p.id)
                       const hasNote = problemNotes[problemKey]
                       const isProblemDone = completedProblems.has(p.id)
                       return (
@@ -594,23 +631,27 @@ export default function StudyCalendarTemplate({
                       e.currentTarget.style.background = 'transparent'
                     }}
                   >
-                    {dayNotes[selectedDayEntry.day] ? '✏ Edit' : '✏ Add'}
+                    {dayNotes[getDayNoteKey(selectedDayEntry.day)] ? '✏ Edit' : '✏ Add'}
                   </button>
                 </div>
-                {dayNotes[selectedDayEntry.day] ? (
-                  <div style={{
-                    fontSize: 12, color: 'rgba(176, 228, 204, 0.8)', lineHeight: '1.5',
-                    padding: '12px', background: 'rgba(176, 228, 204, 0.05)', borderRadius: 8,
-                    borderLeft: '3px solid var(--color-primary)',
-                    whiteSpace: 'pre-wrap', wordBreak: 'break-word',
-                  }}>
-                    {dayNotes[selectedDayEntry.day]}
-                  </div>
-                ) : (
-                  <div style={{ color: 'rgba(176, 228, 204, 0.4)', fontSize: 12, fontStyle: 'italic', textAlign: 'center', padding: '16px 0' }}>
-                    No notes added yet
-                  </div>
-                )}
+                {(() => {
+                  const dayKey = getDayNoteKey(selectedDayEntry.day)
+                  const hasNote = dayNotes[dayKey]
+                  return hasNote ? (
+                    <div style={{
+                      fontSize: 12, color: 'rgba(176, 228, 204, 0.8)', lineHeight: '1.5',
+                      padding: '12px', background: 'rgba(176, 228, 204, 0.05)', borderRadius: 8,
+                      borderLeft: '3px solid var(--color-primary)',
+                      whiteSpace: 'pre-wrap', wordBreak: 'break-word',
+                    }}>
+                      {dayNotes[dayKey]}
+                    </div>
+                  ) : (
+                    <div style={{ color: 'rgba(176, 228, 204, 0.4)', fontSize: 12, fontStyle: 'italic', textAlign: 'center', padding: '16px 0' }}>
+                      No notes added yet
+                    </div>
+                  )
+                })()}
               </div>
             )}
             {/* All days list */}
@@ -720,7 +761,7 @@ export default function StudyCalendarTemplate({
             border: '1px solid var(--color-border)', maxWidth: 500, width: '100%',
             maxHeight: '80vh', overflow: 'auto',
           }}>
-            <h2 style={{ fontSize: 18, fontWeight: 700, marginTop: 0, marginBottom: 16 }}>📌 Day {selectedDay} Notes</h2>
+            <h2 style={{ fontSize: 18, fontWeight: 700, marginTop: 0, marginBottom: 16 }}>📌 Day {selectedDay} Notes ({totalDays}-day calendar)</h2>
             <textarea
               value={dayNoteText}
               onChange={e => setDayNoteText(e.target.value)}
