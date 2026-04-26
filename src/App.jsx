@@ -31,6 +31,10 @@ import Subsets from './routes/problems/Subsets'
 import Combinations from './routes/problems/Combinations'
 import Permutations from './routes/problems/Permutations'
 
+// Pattern Learning
+import SlidingWindowPattern from './routes/patterns/SlidingWindow'
+import DynamicProgramming from './routes/patterns/DynamicProgramming'
+
 // Placeholder for remaining Blind 75 problems
 const CommingSoon = () => <div style={{ minHeight: '100vh', background: 'var(--color-bg-darkest)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-accent)', fontSize: 24, fontWeight: 700 }}>🚀 Coming Soon</div>
 
@@ -69,6 +73,10 @@ function App() {
         <Route path="/problems/subsets" element={<Subsets />} />
         <Route path="/problems/combinations" element={<Combinations />} />
         <Route path="/problems/permutations" element={<Permutations />} />
+        
+        {/* Patterns */}
+        <Route path="/patterns/sliding-window" element={<SlidingWindowPattern />} />
+        <Route path="/patterns/dynamic-programming" element={<DynamicProgramming />} />
         
         {/* Blind 75 Remaining - Placeholders */}
         <Route path="/problems/product-of-array-except-self" element={<CommingSoon />} />

@@ -1,7 +1,8 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../contexts/AuthContext'
-import { saveCalendarStatus, getCalendarStatus } from '../services/firestoreService'
+import { saveCalendarStatus, getCalendarStatus, saveCompletedProblems, getCompletedProblems } from '../services/firestoreService'
+import { resolveProblems } from '../utils/problems'
 
 export const CATEGORY_COLORS = {
   Array:                 { bg: 'rgba(99, 102, 241, 0.15)', border: '#6366f1', text: '#a5b4fc' },
@@ -78,9 +79,20 @@ export default function StudyCalendarTemplate({
   weekDayLabels = DEFAULT_WEEK_DAYS,
   extraStats = [],
 }) {
+  const resolvedDays = useMemo(
+    () => days.map(d => ({ ...d, problems: resolveProblems(d.problems) })),
+    [days]
+  )
   const [completedDays, setCompletedDays] = useState(new Set())
+  const [completedProblems, setCompletedProblems] = useState(new Set())
   const [selectedDay, setSelectedDay] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [problemNotes, setProblemNotes] = useState({})
+  const [dayNotes, setDayNotes] = useState({})
+  const [editingNoteId, setEditingNoteId] = useState(null)
+  const [noteText, setNoteText] = useState('')
+  const [editingDayNote, setEditingDayNote] = useState(false)
+  const [dayNoteText, setDayNoteText] = useState('')
   const { user } = useContext(AuthContext)
 
   // Load calendar status from Firestore when component mounts or user changes
@@ -90,8 +102,12 @@ export default function StudyCalendarTemplate({
         try {
           setLoading(true)
           const calendarId = String(totalDays)
-          const savedStatus = await getCalendarStatus(user.uid, calendarId)
-          setCompletedDays(savedStatus)
+          const [savedDays, savedProblems] = await Promise.all([
+            getCalendarStatus(user.uid, calendarId),
+            getCompletedProblems(user.uid),
+          ])
+          setCompletedDays(savedDays)
+          setCompletedProblems(savedProblems)
         } catch (error) {
           console.error('Failed to load calendar progress:', error)
           // Continue without Firebase sync
@@ -106,7 +122,7 @@ export default function StudyCalendarTemplate({
     loadProgress()
   }, [user, totalDays])
 
-  // Save calendar status to Firestore whenever completedDays changes
+  // Save calendar day status to Firestore whenever completedDays changes
   useEffect(() => {
     if (user && completedDays.size >= 0) {
       const saveProgress = async () => {
@@ -115,34 +131,125 @@ export default function StudyCalendarTemplate({
           await saveCalendarStatus(user.uid, calendarId, completedDays)
         } catch (error) {
           console.error('Failed to save calendar progress:', error)
-          // Continue - progress is saved locally
         }
       }
-      // Debounce save to avoid too frequent writes
       const timer = setTimeout(saveProgress, 1000)
       return () => clearTimeout(timer)
     }
   }, [user, completedDays, totalDays])
 
-  const toggleComplete = (day) => {
-    setCompletedDays(prev => {
+  // Save completed problems to Firestore (global, cross-calendar)
+  useEffect(() => {
+    if (!user) return
+    const timer = setTimeout(() => {
+      saveCompletedProblems(user.uid, completedProblems).catch(e =>
+        console.error('Failed to save completed problems:', e)
+      )
+    }, 1000)
+    return () => clearTimeout(timer)
+  }, [user, completedProblems])
+
+  const toggleProblemComplete = (problemId) => {
+    // Simply toggle this problem, don't cascade to other problems in the day
+    setCompletedProblems(prev => {
       const next = new Set(prev)
-      if (next.has(day)) next.delete(day)
-      else next.add(day)
+      if (next.has(problemId)) {
+        next.delete(problemId)
+      } else {
+        next.add(problemId)
+      }
       return next
     })
   }
 
+  // Auto-mark day as complete if all its problems are completed
+  useEffect(() => {
+    setCompletedDays(prevDays => {
+      const nextDays = new Set(prevDays)
+      
+      for (const day of resolvedDays) {
+        if (day.problems.length === 0) continue
+        
+        const allProblemsInDayDone = day.problems.every(p => completedProblems.has(p.id))
+        if (allProblemsInDayDone) {
+          nextDays.add(day.day)
+        }
+      }
+      
+      return nextDays
+    })
+  }, [completedProblems, resolvedDays])
+
+  const toggleComplete = (day) => {
+    // Toggle day completion and sync all problems in that day
+    const dayEntry = resolvedDays.find(d => d.day === day)
+    if (!dayEntry || dayEntry.problems.length === 0) return
+    
+    const willMarkDay = !completedDays.has(day)
+    
+    setCompletedDays(prev => {
+      const next = new Set(prev)
+      if (next.has(day)) {
+        next.delete(day)
+      } else {
+        next.add(day)
+      }
+      return next
+    })
+    
+    // Sync problems: only mark all problems when marking the day (don't unmark on day unmark)
+    setCompletedProblems(prev => {
+      const next = new Set(prev)
+      if (willMarkDay) {
+        dayEntry.problems.forEach(p => next.add(p.id))
+      }
+      // Don't unmark problems when unmarking the day
+      return next
+    })
+  }
+
+  const openProblemNoteEditor = (problemId, currentNote = '') => {
+    setEditingNoteId(problemId)
+    setNoteText(currentNote)
+  }
+
+  const saveProblemNote = () => {
+    setProblemNotes(prev => ({
+      ...prev,
+      [editingNoteId]: noteText,
+    }))
+    setEditingNoteId(null)
+    setNoteText('')
+  }
+
+  const openDayNoteEditor = (day) => {
+    setSelectedDay(day)
+    setEditingDayNote(true)
+    setDayNoteText(dayNotes[day] || '')
+  }
+
+  const saveDayNote = () => {
+    setDayNotes(prev => ({
+      ...prev,
+      [selectedDay]: dayNoteText,
+    }))
+    setEditingDayNote(false)
+    setDayNoteText('')
+  }
+
+  const getProblemKey = (dayNum, problemIndex) => `day-${dayNum}-prob-${problemIndex}`
+
   const completedCount = completedDays.size
   const progressPercent = Math.round((completedCount / totalDays) * 100)
-  const selectedDayEntry = selectedDay ? days.find(d => d.day === selectedDay) : null
+  const selectedDayEntry = selectedDay ? resolvedDays.find(d => d.day === selectedDay) : null
 
-  const allProblems = days.flatMap(d => d.problems)
+  const allProblems = resolvedDays.flatMap(d => d.problems)
   const WEEKS = buildWeeks(totalDays)
 
   const defaultStats = [
     { label: 'Days Done', value: completedCount, color: '#34d399' },
     { label: 'Remaining', value: totalDays - completedCount, color: '#fbbf24' },
+    { label: 'Problems Done', value: allProblems.filter(p => completedProblems.has(p.id)).length, color: '#a78bfa' },
     { label: 'Easy', value: allProblems.filter(p => p.difficulty === 'Easy').length, color: '#34d399' },
     { label: 'Medium', value: allProblems.filter(p => p.difficulty === 'Medium').length, color: '#fbbf24' },
     { label: 'Hard', value: allProblems.filter(p => p.difficulty === 'Hard').length, color: '#f87171' },
@@ -154,7 +261,7 @@ export default function StudyCalendarTemplate({
 
       {/* ── Header ── */}
       <div style={{ background: headerGradient, padding: '40px 30px', borderBottom: '1px solid var(--color-border)' }}>
-        <div style={{ maxWidth: 1400, margin: '0 auto' }}>
+        <div style={{ maxWidth: 1450, margin: '0 auto' }}>
 
           {/* Breadcrumbs */}
           {breadcrumbs.length > 0 && (
@@ -200,15 +307,15 @@ export default function StudyCalendarTemplate({
       </div>
 
       {/* ── Body ── */}
-      <div style={{ maxWidth: 1400, margin: '0 auto', padding: '40px 20px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: 32, alignItems: 'start' }}>
+      <div style={{ maxWidth: 1450, margin: '0 auto', padding: '40px 20px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: 32, alignItems: 'start', overflow: 'hidden' }}>
 
           {/* Calendar grid */}
-          <div>
+          <div style={{ minWidth: 0, overflowX: 'auto' }}>
             <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 20 }}>📆 Calendar View</h2>
 
             {/* Weekday headers */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 6, marginBottom: 6 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 6, marginBottom: 6, minWidth: 'min-content' }}>
               {weekDayLabels.map(d => (
                 <div key={d} style={{ textAlign: 'center', fontSize: 11, fontWeight: 700, color: 'rgba(176, 228, 204, 0.5)', paddingBottom: 6 }}>
                   {d}
@@ -218,10 +325,10 @@ export default function StudyCalendarTemplate({
 
             {/* Rows */}
             {WEEKS.map((week, wi) => (
-              <div key={wi} style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 6, marginBottom: 6 }}>
+              <div key={wi} style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 6, marginBottom: 6, minWidth: 'min-content' }}>
                 {week.map((dayNum, di) => {
                   if (!dayNum) return <div key={di} />
-                  const entry = days.find(d => d.day === dayNum)
+                  const entry = resolvedDays.find(d => d.day === dayNum)
                   const isCompleted = completedDays.has(dayNum)
                   const isSelected = selectedDay === dayNum
                   const cat = dayPrimaryCategory(entry)
@@ -309,7 +416,9 @@ export default function StudyCalendarTemplate({
                             color: isCompleted ? '#6ee7b7' : 'rgba(176, 228, 204, 0.65)',
                             overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', marginBottom: 1,
                           }}>
-                            <span style={{ color: DIFF_COLOR[p.difficulty]?.color, marginRight: 2 }}>●</span>
+                            <span style={{ color: completedProblems.has(p.id) ? '#34d399' : DIFF_COLOR[p.difficulty]?.color, marginRight: 2 }}>
+                              {completedProblems.has(p.id) ? '✓' : '●'}
+                            </span>
                             {p.title}
                           </div>
                         ))
@@ -321,7 +430,7 @@ export default function StudyCalendarTemplate({
             ))}
 
             {/* Category legend */}
-            <div style={{ marginTop: 28 }}>
+            <div style={{ marginTop: 28, minWidth: 'min-content' }}>
               <h3 style={{ fontSize: 13, fontWeight: 700, color: 'rgba(176, 228, 204, 0.7)', marginBottom: 12 }}>Category Legend</h3>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                 {Object.entries(CATEGORY_COLORS)
@@ -374,31 +483,78 @@ export default function StudyCalendarTemplate({
                     Review &amp; revise previous problems
                   </div>
                 ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                     {selectedDayEntry.problems.map((p, i) => {
                       const catColor = CATEGORY_COLORS[p.category]
                       const diffColor = DIFF_COLOR[p.difficulty]
+                      const problemKey = getProblemKey(selectedDayEntry.day, i)
+                      const hasNote = problemNotes[problemKey]
+                      const isProblemDone = completedProblems.has(p.id)
                       return (
-                        <Link key={i} to={p.path} style={{ textDecoration: 'none' }}>
-                          <div
-                            style={{
-                              background: catColor?.bg || 'rgba(176, 228, 204, 0.05)',
-                              border: `1px solid ${catColor?.border || 'var(--color-border)'}40`,
-                              borderRadius: 10, padding: '12px 14px', transition: 'all 0.2s ease', cursor: 'pointer',
-                            }}
-                            onMouseEnter={e => { e.currentTarget.style.borderColor = catColor?.border || 'var(--color-primary)' }}
-                            onMouseLeave={e => { e.currentTarget.style.borderColor = `${catColor?.border || 'var(--color-border)'}40` }}
-                          >
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
-                              <span style={{ fontSize: 11, fontFamily: 'monospace', color: 'rgba(176, 228, 204, 0.5)' }}>#{p.num}</span>
-                              <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 6, background: diffColor?.bg, color: diffColor?.color, fontWeight: 700 }}>
-                                {p.difficulty}
-                              </span>
-                            </div>
-                            <div style={{ fontSize: 13, fontWeight: 600, color: catColor?.text || 'var(--color-accent)' }}>{p.title}</div>
-                            <div style={{ fontSize: 11, color: 'rgba(176, 228, 204, 0.4)', marginTop: 4 }}>{p.category}</div>
+                        <div
+                          key={i}
+                          style={{
+                            background: isProblemDone
+                              ? 'rgba(52, 211, 153, 0.08)'
+                              : catColor?.bg || 'rgba(176, 228, 204, 0.05)',
+                            border: `1px solid ${isProblemDone ? '#34d399' : catColor?.border || 'var(--color-border)'}40`,
+                            borderRadius: 6, padding: '6px 8px',
+                            transition: 'all 0.2s ease',
+                          }}
+                        >
+                          {/* Single row: num + title + [note] [done] */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                            <span style={{ fontSize: 9, fontFamily: 'monospace', color: 'rgba(176, 228, 204, 0.4)', flexShrink: 0 }}>#{p.num}</span>
+                            <span style={{ fontSize: 11, fontWeight: 600, color: isProblemDone ? '#34d399' : catColor?.text || 'var(--color-accent)', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                              {p.title}
+                            </span>
+                            <span style={{ fontSize: 8, padding: '1px 5px', borderRadius: 3, background: diffColor?.bg, color: diffColor?.color, fontWeight: 700, flexShrink: 0 }}>
+                              {p.difficulty}
+                            </span>
+                            {/* Note button */}
+                            <button
+                              onClick={() => openProblemNoteEditor(problemKey, problemNotes[problemKey] || '')}
+                              style={{
+                                width: 20, height: 20, borderRadius: 3, flexShrink: 0,
+                                border: `1px solid ${hasNote ? catColor?.border || 'var(--color-primary)' : 'rgba(176, 228, 204, 0.25)'}`,
+                                background: hasNote ? 'rgba(176, 228, 204, 0.12)' : 'transparent',
+                                color: hasNote ? 'rgba(176, 228, 204, 0.9)' : 'rgba(176, 228, 204, 0.4)',
+                                cursor: 'pointer', fontSize: 10, padding: 0,
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              }}
+                              title={hasNote ? 'Edit note' : 'Add note'}
+                            >📝</button>
+                            {/* Mark done checkbox */}
+                            <button
+                              onClick={() => toggleProblemComplete(p.id)}
+                              title={isProblemDone ? 'Mark undone' : 'Mark done'}
+                              style={{
+                                width: 16, height: 16, borderRadius: 3, flexShrink: 0, padding: 0,
+                                border: `1.5px solid ${isProblemDone ? '#34d399' : 'rgba(176, 228, 204, 0.35)'}`,
+                                background: isProblemDone ? '#34d399' : 'transparent',
+                                color: '#000', cursor: 'pointer', transition: 'all 0.15s ease',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 900,
+                              }}
+                              onMouseEnter={e => { e.currentTarget.style.borderColor = '#34d399' }}
+                              onMouseLeave={e => { e.currentTarget.style.borderColor = isProblemDone ? '#34d399' : 'rgba(176, 228, 204, 0.35)' }}
+                            >
+                              {isProblemDone ? '✓' : ''}
+                            </button>
                           </div>
-                        </Link>
+
+                          {/* Notes preview */}
+                          {hasNote && (
+                            <div style={{
+                              fontSize: 9, color: 'rgba(176, 228, 204, 0.5)', fontStyle: 'italic',
+                              marginTop: 3, paddingTop: 3, borderTop: '1px solid rgba(176, 228, 204, 0.08)',
+                              lineHeight: '1.3', overflow: 'hidden',
+                              display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical',
+                              textOverflow: 'ellipsis',
+                            }}>
+                              📌 {problemNotes[problemKey]}
+                            </div>
+                          )}
+                        </div>
                       )
                     })}
                   </div>
@@ -413,7 +569,50 @@ export default function StudyCalendarTemplate({
                 <div style={{ color: 'rgba(176, 228, 204, 0.5)', fontSize: 14 }}>Click a day to see problems</div>
               </div>
             )}
-
+            {/* Day Notes Section */}
+            {selectedDayEntry && (
+              <div style={{
+                background: 'var(--color-bg-dark)', border: '1px solid var(--color-border)',
+                borderRadius: 16, padding: 20, marginBottom: 20,
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+                  <h3 style={{ fontSize: 14, fontWeight: 700, margin: 0 }}>📌 Day Notes</h3>
+                  <button
+                    onClick={() => openDayNoteEditor(selectedDayEntry.day)}
+                    style={{
+                      padding: '4px 12px', borderRadius: 6, fontSize: 11, fontWeight: 600,
+                      border: '1px solid rgba(176, 228, 204, 0.3)',
+                      background: 'transparent', color: 'rgba(176, 228, 204, 0.7)',
+                      cursor: 'pointer', transition: 'all 0.2s ease',
+                    }}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.borderColor = 'rgba(176, 228, 204, 0.7)'
+                      e.currentTarget.style.background = 'rgba(176, 228, 204, 0.05)'
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.borderColor = 'rgba(176, 228, 204, 0.3)'
+                      e.currentTarget.style.background = 'transparent'
+                    }}
+                  >
+                    {dayNotes[selectedDayEntry.day] ? '✏ Edit' : '✏ Add'}
+                  </button>
+                </div>
+                {dayNotes[selectedDayEntry.day] ? (
+                  <div style={{
+                    fontSize: 12, color: 'rgba(176, 228, 204, 0.8)', lineHeight: '1.5',
+                    padding: '12px', background: 'rgba(176, 228, 204, 0.05)', borderRadius: 8,
+                    borderLeft: '3px solid var(--color-primary)',
+                    whiteSpace: 'pre-wrap', wordBreak: 'break-word',
+                  }}>
+                    {dayNotes[selectedDayEntry.day]}
+                  </div>
+                ) : (
+                  <div style={{ color: 'rgba(176, 228, 204, 0.4)', fontSize: 12, fontStyle: 'italic', textAlign: 'center', padding: '16px 0' }}>
+                    No notes added yet
+                  </div>
+                )}
+              </div>
+            )}
             {/* All days list */}
             <div style={{
               background: 'var(--color-bg-dark)', border: '1px solid var(--color-border)',
@@ -421,7 +620,7 @@ export default function StudyCalendarTemplate({
             }}>
               <h3 style={{ fontSize: 14, fontWeight: 700, marginBottom: 16, marginTop: 0 }}>All {totalDays} Days</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                {days.map(entry => {
+                {resolvedDays.map(entry => {
                   const isCompleted = completedDays.has(entry.day)
                   const cat = dayPrimaryCategory(entry)
                   const catColor = cat ? CATEGORY_COLORS[cat] : null
@@ -458,6 +657,106 @@ export default function StudyCalendarTemplate({
           </div>
         </div>
       </div>
+
+      {/* ── Problem Note Modal ── */}
+      {editingNoteId && (
+        <div style={{
+          position: 'fixed', inset: 0, background: 'rgba(0, 0, 0, 0.6)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          zIndex: 1000, padding: '20px',
+        }}>
+          <div style={{
+            background: 'var(--color-bg-dark)', borderRadius: 16, padding: 24,
+            border: '1px solid var(--color-border)', maxWidth: 500, width: '100%',
+            maxHeight: '80vh', overflow: 'auto',
+          }}>
+            <h2 style={{ fontSize: 18, fontWeight: 700, marginTop: 0, marginBottom: 16 }}>📝 Problem Notes</h2>
+            <textarea
+              value={noteText}
+              onChange={e => setNoteText(e.target.value)}
+              placeholder="Write your notes, approach, hints, or reflections here..."
+              style={{
+                width: '100%', minHeight: 200, padding: '12px', borderRadius: 8,
+                border: '1px solid var(--color-border)', background: 'var(--color-bg-darker)',
+                color: 'var(--color-accent)', fontSize: 13, fontFamily: 'monospace',
+                resize: 'vertical', boxSizing: 'border-box',
+              }}
+            />
+            <div style={{ display: 'flex', gap: 12, marginTop: 16, justifyContent: 'flex-end' }}>
+              <button
+                onClick={() => { setEditingNoteId(null); setNoteText('') }}
+                style={{
+                  padding: '10px 16px', borderRadius: 8, fontSize: 13, fontWeight: 600,
+                  border: '1px solid var(--color-border)', background: 'transparent',
+                  color: 'rgba(176, 228, 204, 0.7)', cursor: 'pointer',
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={saveProblemNote}
+                style={{
+                  padding: '10px 16px', borderRadius: 8, fontSize: 13, fontWeight: 600,
+                  border: 'none', background: 'var(--color-primary)',
+                  color: '#000', cursor: 'pointer',
+                }}
+              >
+                Save Note
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Day Note Modal ── */}
+      {editingDayNote && (
+        <div style={{
+          position: 'fixed', inset: 0, background: 'rgba(0, 0, 0, 0.6)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          zIndex: 1000, padding: '20px',
+        }}>
+          <div style={{
+            background: 'var(--color-bg-dark)', borderRadius: 16, padding: 24,
+            border: '1px solid var(--color-border)', maxWidth: 500, width: '100%',
+            maxHeight: '80vh', overflow: 'auto',
+          }}>
+            <h2 style={{ fontSize: 18, fontWeight: 700, marginTop: 0, marginBottom: 16 }}>📌 Day {selectedDay} Notes</h2>
+            <textarea
+              value={dayNoteText}
+              onChange={e => setDayNoteText(e.target.value)}
+              placeholder="Add daily recap, key learnings, or progress notes..."
+              style={{
+                width: '100%', minHeight: 200, padding: '12px', borderRadius: 8,
+                border: '1px solid var(--color-border)', background: 'var(--color-bg-darker)',
+                color: 'var(--color-accent)', fontSize: 13, fontFamily: 'monospace',
+                resize: 'vertical', boxSizing: 'border-box',
+              }}
+            />
+            <div style={{ display: 'flex', gap: 12, marginTop: 16, justifyContent: 'flex-end' }}>
+              <button
+                onClick={() => { setEditingDayNote(false); setDayNoteText('') }}
+                style={{
+                  padding: '10px 16px', borderRadius: 8, fontSize: 13, fontWeight: 600,
+                  border: '1px solid var(--color-border)', background: 'transparent',
+                  color: 'rgba(176, 228, 204, 0.7)', cursor: 'pointer',
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={saveDayNote}
+                style={{
+                  padding: '10px 16px', borderRadius: 8, fontSize: 13, fontWeight: 600,
+                  border: 'none', background: 'var(--color-primary)',
+                  color: '#000', cursor: 'pointer',
+                }}
+              >
+                Save Notes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

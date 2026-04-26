@@ -188,16 +188,21 @@ export default function Home() {
       <div style={{ background: `linear-gradient(135deg, var(--color-primary), var(--color-bg-darker))`, color: 'var(--color-accent)', padding: '60px 30px', textAlign: 'center', borderBottom: `1px solid var(--color-border)` }}>
         <h1 style={{ fontSize: 42, fontWeight: 800, marginBottom: 12, letterSpacing: '-0.5px' }}>🎯 DSA Visualizer</h1>
         <p style={{ opacity: 0.9, fontSize: 18, marginBottom: 24 }}>Master the Blind 75 with interactive, step-by-step visualizations</p>
-        <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-          <div style={{ padding: '8px 16px', background: 'rgba(176, 228, 204, 0.1)', borderRadius: 8, fontSize: 14 }}>✨ 75 Blind 75 Problems</div>
-          <div style={{ padding: '8px 16px', background: 'rgba(176, 228, 204, 0.1)', borderRadius: 8, fontSize: 14 }}>🔍 Multiple Approaches</div>
-          <div style={{ padding: '8px 16px', background: 'rgba(176, 228, 204, 0.1)', borderRadius: 8, fontSize: 14 }}>📊 Real-time Execution</div>          
+        {isAuthenticated && (
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>        
             <Link to="/study-calendar" style={{ padding: '8px 16px', background: 'rgba(16, 185, 129, 0.2)', borderRadius: 8, fontSize: 14, color: '#34d399', textDecoration: 'none', fontWeight: 600, border: '1px solid #34d39940' }}>📅 30-Day Study Plan</Link>          
             <Link to="/study-calendar-45" style={{ padding: '8px 16px', background: 'rgba(99, 102, 241, 0.2)', borderRadius: 8, fontSize: 14, color: '#a5b4fc', textDecoration: 'none', fontWeight: 600, border: '1px solid #6366f140' }}>🗓️ 45-Day Blind 75</Link>          
             <Link to="/study-calendar-60" style={{ padding: '8px 16px', background: 'rgba(168, 85, 247, 0.2)', borderRadius: 8, fontSize: 14, color: '#c4b5fd', textDecoration: 'none', fontWeight: 600, border: '1px solid #a855f740' }}>🚀 60-Day NeetCode 150</Link>          
             <Link to="/study-calendar-90" style={{ padding: '8px 16px', background: 'rgba(239, 68, 68, 0.2)', borderRadius: 8, fontSize: 14, color: '#fca5a5', textDecoration: 'none', fontWeight: 600, border: '1px solid #ef444440' }}>🏆 90-Day Calender</Link>
             <Link to="/study-calendar-100" style={{ padding: '8px 16px', background: 'rgba(239, 68, 68, 0.2)', borderRadius: 8, fontSize: 14, color: '#fca5a5', textDecoration: 'none', fontWeight: 600, border: '1px solid #ef444440' }}>🏆 100-Day AlgoMaster 300</Link>        
           </div>
+        )}
+        {!isAuthenticated && (
+          <div style={{ textAlign: 'center', padding: '24px', background: 'rgba(59, 130, 246, 0.1)', borderRadius: 8, border: '1px solid rgba(59, 130, 246, 0.3)', marginBottom: 24 }}>
+            <p style={{ fontSize: 16, marginBottom: 12, color: 'rgba(176, 228, 204, 0.8)' }}>🔒 Study plans are only available for logged-in users.</p>
+            <Link to="/login" style={{ padding: '10px 20px', background: 'var(--color-accent)', color: 'var(--color-bg-darkest)', textDecoration: 'none', borderRadius: 6, fontSize: 14, fontWeight: 600, display: 'inline-block', transition: 'all 0.2s' }}>Sign in to access study calendars</Link>
+          </div>
+        )}
       </div>
 
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 20px' }}>

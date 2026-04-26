@@ -141,3 +141,124 @@ export async function getUserProfile(userId) {
     return null
   }
 }
+
+/**
+ * Save problem note and progress to Firestore
+ * @param {string} userId - The user's ID
+ * @param {string} patternType - Pattern type (e.g., 'fixed', 'dynamic')
+ * @param {Object} problemData - Problem data with note and completion status
+ */
+export async function saveProblemNote(userId, patternType, problemData) {
+  try {
+    if (!db || !userId) {
+      console.warn('Firestore not configured or userId missing.')
+      return false
+    }
+
+    const docRef = doc(db, 'users', userId, 'problems', `${patternType}_${problemData.id}`)
+    
+    await setDoc(docRef, {
+      id: problemData.id,
+      title: problemData.title,
+      patternType,
+      userNote: problemData.userNote || '',
+      completed: problemData.completed || false,
+      lastUpdated: new Date().toISOString(),
+    }, { merge: true })
+
+    return true
+  } catch (error) {
+    console.error('Error saving problem note:', error)
+    return false
+  }
+}
+
+/**
+ * Get problem note from Firestore
+ * @param {string} userId - The user's ID
+ * @param {string} patternType - Pattern type (e.g., 'fixed', 'dynamic')
+ * @param {string} problemId - Problem ID
+ */
+export async function getProblemNote(userId, patternType, problemId) {
+  try {
+    if (!db || !userId) {
+      return null
+    }
+
+    const docRef = doc(db, 'users', userId, 'problems', `${patternType}_${problemId}`)
+    const docSnap = await getDoc(docRef)
+
+    if (docSnap.exists()) {
+      return docSnap.data()
+    }
+
+    return null
+  } catch (error) {
+    console.error('Error loading problem note:', error)
+    return null
+  }
+}
+
+/**
+ * Get all problems for a pattern type with user notes
+ * @param {string} userId - The user's ID
+ * @param {string} patternType - Pattern type (e.g., 'fixed', 'dynamic')
+ */
+export async function getPatternProblems(userId, patternType) {
+  try {
+    if (!db || !userId) {
+      return []
+    }
+
+    const problemsRef = collection(db, 'users', userId, 'problems')
+    const q = query(problemsRef, where('patternType', '==', patternType))
+    const querySnapshot = await getDocs(q)
+
+    const problems = []
+    querySnapshot.forEach((doc) => {
+      problems.push(doc.data())
+    })
+
+    return problems
+  } catch (error) {
+    console.error('Error loading pattern problems:', error)
+    return []
+  }
+}
+
+/**
+ * Save the set of completed problem IDs (global, cross-calendar).
+ * Stored under users/{uid}/progress/problems
+ */
+export async function saveCompletedProblems(userId, completedProblems) {
+  try {
+    if (!db) return false
+    const docRef = doc(db, 'users', userId, 'progress', 'problems')
+    await setDoc(docRef, {
+      completedIds: Array.from(completedProblems),
+      lastUpdated: new Date().toISOString(),
+    }, { merge: true })
+    return true
+  } catch (error) {
+    console.error('Error saving completed problems:', error)
+    return false
+  }
+}
+
+/**
+ * Load the set of completed problem IDs (global, cross-calendar).
+ */
+export async function getCompletedProblems(userId) {
+  try {
+    if (!db) return new Set()
+    const docRef = doc(db, 'users', userId, 'progress', 'problems')
+    const snap = await getDoc(docRef)
+    if (snap.exists()) {
+      return new Set(snap.data().completedIds ?? [])
+    }
+    return new Set()
+  } catch (error) {
+    console.error('Error loading completed problems:', error)
+    return new Set()
+  }
+}

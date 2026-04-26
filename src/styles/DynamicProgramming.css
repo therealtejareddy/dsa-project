@@ -1,0 +1,1059 @@
+/* ═══════════════════════════════════════════════════════════════════════════════
+   DYNAMIC PROGRAMMING PATTERN — Styles
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* ── Layout ──────────────────────────────────────────────────────────────── */
+.dp-container {
+  min-height: 100vh;
+  background-color: var(--color-bg-darkest);
+  padding-bottom: 60px;
+}
+
+.dp-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.dp-full-width {
+  width: 100%;
+}
+
+.dp-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* ── Pattern Tabs (top nav) ──────────────────────────────────────────────── */
+.dp-pattern-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.dp-pattern-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  padding: 10px 16px;
+  border: 2px solid var(--color-bg-darker);
+  border-radius: 8px;
+  background-color: var(--color-bg-darkest);
+  color: var(--color-accent);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-align: left;
+  min-width: 130px;
+}
+
+.dp-pattern-tab:hover {
+  border-color: var(--color-primary);
+  background-color: var(--color-overlay-light);
+  transform: translateY(-2px);
+}
+
+.dp-pattern-tab.active {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary);
+  color: var(--color-bg-darkest);
+  box-shadow: 0 4px 14px var(--color-overlay-strong);
+}
+
+.dp-tab-label {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.dp-tab-desc {
+  font-size: 0.75rem;
+  opacity: 0.75;
+}
+
+.dp-pattern-tab.active .dp-tab-desc {
+  opacity: 0.9;
+}
+
+/* ── Pattern Section ─────────────────────────────────────────────────────── */
+.dp-pattern-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: dp-fade-in 0.3s ease;
+}
+
+@keyframes dp-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── ComingSoon ──────────────────────────────────────────────────────────── */
+.dp-coming-soon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  gap: 16px;
+  border: 2px dashed var(--color-bg-darker);
+}
+
+.dp-coming-icon {
+  font-size: 3rem;
+}
+
+.dp-coming-soon h2 {
+  color: var(--color-accent);
+  font-size: 1.4rem;
+}
+
+.dp-coming-soon p {
+  color: var(--color-text-light);
+  font-size: 1rem;
+  opacity: 0.7;
+}
+
+/* ── Approach Tabs ("Recursion / Memoization / Tabulation") ─────────────── */
+.dp-approach-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  border-bottom: 2px solid var(--color-bg-darker);
+  padding-bottom: 8px;
+}
+
+.dp-approach-tab {
+  padding: 9px 18px;
+  border: none;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  color: var(--color-text-light);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 6px 6px 0 0;
+  margin-bottom: -2px;
+}
+
+.dp-approach-tab:hover {
+  color: var(--color-accent);
+  background-color: var(--color-overlay-light);
+}
+
+.dp-approach-tab.active {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+  background-color: var(--color-overlay-light);
+}
+
+/* ── Language Tabs ───────────────────────────────────────────────────────── */
+.dp-lang-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.dp-lang-btn {
+  padding: 6px 14px;
+  border: 1px solid var(--color-bg-darker);
+  border-radius: 6px;
+  background-color: var(--color-bg-darkest);
+  color: var(--color-text-light);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dp-lang-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-accent);
+}
+
+.dp-lang-btn.active {
+  background-color: var(--color-primary);
+  color: var(--color-bg-darkest);
+  border-color: var(--color-primary);
+}
+
+/* ── Input Bar ───────────────────────────────────────────────────────────── */
+.dp-input-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding: 14px 18px;
+  background-color: var(--color-overlay-light);
+  border-radius: 10px;
+  border: 1px solid var(--color-bg-darker);
+}
+
+.dp-input-bar label {
+  color: var(--color-primary);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.dp-n-input {
+  width: 72px;
+  padding: 8px 10px;
+  border: 2px solid var(--color-bg-darker);
+  border-radius: 6px;
+  background-color: var(--color-bg-dark);
+  color: var(--color-accent);
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.dp-n-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-overlay-light);
+}
+
+.dp-result-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: var(--color-success-light, rgba(16,185,129,0.15));
+  border: 1px solid var(--color-success);
+  border-radius: 8px;
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.dp-result-val {
+  color: var(--color-success);
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.dp-input-hint {
+  color: var(--color-text-light);
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+/* ── Example Use Box ─────────────────────────────────────────────────────── */
+.dp-example-use {
+  background-color: var(--color-overlay-light);
+  padding: 10px 14px;
+  border-left: 3px solid var(--color-primary);
+  border-radius: 6px;
+  margin-top: 12px;
+  color: var(--color-accent);
+  font-size: 0.9rem;
+}
+
+/* ── Complexity Table ────────────────────────────────────────────────────── */
+.dp-complexity-table {
+  margin-top: 16px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--color-bg-darker);
+}
+
+.dp-cmp-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1.4fr;
+  gap: 0;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--color-bg-darker);
+  font-size: 0.9rem;
+  color: var(--color-accent);
+}
+
+.dp-cmp-row.header {
+  background-color: var(--color-bg-darker);
+  font-weight: 700;
+  color: var(--color-primary);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.dp-cmp-row.active {
+  background-color: var(--color-overlay-medium);
+  font-weight: 600;
+}
+
+.dp-cmp-row:last-child {
+  border-bottom: none;
+}
+
+/* ── Algo Steps ──────────────────────────────────────────────────────────── */
+.dp-algo-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.dp-step {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  background-color: var(--color-overlay-light);
+  border-radius: 10px;
+  border: 1px solid var(--color-bg-darker);
+}
+
+.dp-step-num {
+  min-width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  color: var(--color-bg-darkest);
+  font-weight: 800;
+  font-size: 1rem;
+}
+
+.dp-step-body strong {
+  display: block;
+  color: var(--color-primary);
+  margin-bottom: 4px;
+  font-size: 0.95rem;
+}
+
+.dp-step-body p {
+  color: var(--color-accent);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.dp-step-body code {
+  background-color: var(--color-overlay-light);
+  color: var(--color-primary);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+/* ── Tips List ───────────────────────────────────────────────────────────── */
+.dp-tips-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dp-tips-list li {
+  padding: 10px 14px;
+  background-color: var(--color-overlay-light);
+  border-left: 3px solid var(--color-primary);
+  border-radius: 0 6px 6px 0;
+  color: var(--color-accent);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.dp-tips-list li strong {
+  color: var(--color-primary);
+}
+
+/* ── Practice Problems Grid ──────────────────────────────────────────────── */
+.dp-problems-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+  margin-top: 12px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   VISUALIZERS
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+.dp-viz-placeholder {
+  text-align: center;
+  padding: 40px;
+  color: var(--color-text-light);
+  font-size: 0.95rem;
+  opacity: 0.7;
+}
+
+/* ── Shared Call Badge ───────────────────────────────────────────────────── */
+.dp-call-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+  width: 100%;
+  background-color: var(--color-overlay-light);
+  border-left: 4px solid var(--color-primary);
+  color: var(--color-accent);
+}
+
+.dp-call-badge.return {
+  border-left-color: var(--color-success);
+  background-color: var(--color-success-light, rgba(16,185,129,0.1));
+}
+
+.dp-call-badge.hit {
+  border-left-color: var(--color-warning);
+  background-color: var(--color-warning-light);
+}
+
+.dp-call-badge.store {
+  border-left-color: var(--color-info);
+  background-color: var(--color-info-light);
+}
+
+/* ── Recursion Visualizer ────────────────────────────────────────────────── */
+.dp-viz-recursion {
+  width: 100%;
+  padding: 12px 0;
+}
+
+.dp-recursion-info {
+  margin-bottom: 8px;
+}
+
+.dp-tree-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 0;
+  overflow-x: auto;
+}
+
+.dp-tree-level {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.dp-tree-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 2px solid var(--color-bg-darker);
+  background-color: var(--color-bg-dark);
+  transition: all 0.25s ease;
+  min-width: 70px;
+  text-align: center;
+}
+
+.dp-tree-node.active {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary);
+  transform: scale(1.1);
+  box-shadow: 0 0 14px var(--color-overlay-strong);
+}
+
+.dp-tree-node.resolved {
+  border-color: var(--color-success);
+  opacity: 0.9;
+}
+
+.dp-node-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.dp-tree-node.active .dp-node-label {
+  color: var(--color-bg-darkest);
+}
+
+.dp-node-val {
+  font-size: 0.75rem;
+  color: var(--color-success);
+  font-weight: 700;
+  margin-top: 2px;
+}
+
+.dp-callstack {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 8px 12px;
+  background-color: var(--color-bg-darkest);
+  border-radius: 8px;
+}
+
+.dp-callstack-title {
+  color: var(--color-text-light);
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-right: 4px;
+}
+
+.dp-callstack-item {
+  padding: 3px 10px;
+  border-radius: 4px;
+  background-color: var(--color-overlay-light);
+  color: var(--color-primary);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* ── Memoization Visualizer ──────────────────────────────────────────────── */
+.dp-viz-memo {
+  width: 100%;
+  padding: 12px 0;
+}
+
+.dp-memo-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.dp-memo-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 2px solid var(--color-bg-darker);
+  background-color: var(--color-bg-darkest);
+  min-width: 64px;
+  transition: all 0.25s ease;
+}
+
+.dp-memo-cell.filled {
+  border-color: var(--color-success);
+  background-color: var(--color-success-light, rgba(16,185,129,0.1));
+}
+
+.dp-memo-cell.active {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary);
+  transform: scale(1.1);
+  box-shadow: 0 0 14px var(--color-overlay-strong);
+}
+
+.dp-memo-key {
+  font-size: 0.75rem;
+  color: var(--color-text-light);
+}
+
+.dp-memo-cell.active .dp-memo-key {
+  color: var(--color-bg-darkest);
+}
+
+.dp-memo-val {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--color-success);
+  margin-top: 4px;
+}
+
+.dp-memo-cell.active .dp-memo-val {
+  color: var(--color-bg-darkest);
+}
+
+.dp-memo-stats {
+  display: flex;
+  gap: 20px;
+  padding: 8px 12px;
+  background-color: var(--color-bg-darkest);
+  border-radius: 8px;
+  color: var(--color-accent);
+  font-size: 0.85rem;
+}
+
+.dp-saved {
+  margin-left: auto;
+}
+
+/* ── Tabulation Visualizer ───────────────────────────────────────────────── */
+.dp-viz-table {
+  width: 100%;
+  padding: 12px 0;
+}
+
+.dp-table-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 12px 0;
+}
+
+.dp-table-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 10px;
+  border-radius: 8px;
+  border: 2px solid var(--color-bg-darker);
+  background-color: var(--color-bg-darkest);
+  min-width: 60px;
+  transition: all 0.25s ease;
+}
+
+.dp-table-cell.filled {
+  background-color: var(--color-overlay-light);
+  border-color: var(--color-bg-darker);
+}
+
+.dp-table-cell.active {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary);
+  transform: scale(1.12);
+  box-shadow: 0 0 16px var(--color-overlay-strong);
+}
+
+.dp-table-cell.from1 {
+  border-color: var(--color-info);
+  background-color: var(--color-info-light);
+}
+
+.dp-table-cell.from2 {
+  border-color: var(--color-warning);
+  background-color: var(--color-warning-light);
+}
+
+.dp-table-cell.empty {
+  opacity: 0.4;
+}
+
+.dp-cell-label {
+  font-size: 0.72rem;
+  color: var(--color-text-light);
+  margin-bottom: 4px;
+}
+
+.dp-table-cell.active .dp-cell-label {
+  color: var(--color-bg-darkest);
+}
+
+.dp-cell-val {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--color-accent);
+}
+
+.dp-table-cell.active .dp-cell-val {
+  color: var(--color-bg-darkest);
+}
+
+.dp-table-arrows {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 12px;
+  background-color: var(--color-bg-darkest);
+  border-radius: 8px;
+  font-family: 'Monaco', 'Fira Code', monospace;
+  font-size: 0.8rem;
+  color: var(--color-accent);
+  margin-bottom: 10px;
+}
+
+.dp-arrow-from1 { color: var(--color-info); }
+.dp-arrow-merge { color: var(--color-success); }
+.dp-arrow-from2 { color: var(--color-warning); }
+
+.dp-table-progress {
+  color: var(--color-text-light);
+  font-size: 0.85rem;
+  margin-top: 8px;
+}
+
+/* ── card overrides for DP ───────────────────────────────────────────────── */
+.dp-pattern-section .card h2 {
+  color: var(--color-accent);
+  font-size: 1.15rem;
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--color-primary);
+}
+
+.dp-pattern-section .card ul {
+  list-style: disc;
+  padding-left: 20px;
+  color: var(--color-accent);
+  line-height: 1.8;
+}
+
+.dp-pattern-section .card li {
+  margin-bottom: 6px;
+}
+
+.dp-pattern-section .card li strong {
+  color: var(--color-primary);
+}
+
+.dp-pattern-section .card p {
+  color: var(--color-accent);
+  line-height: 1.7;
+  margin-bottom: 10px;
+}
+
+.dp-pattern-section .card p strong {
+  color: var(--color-primary);
+}
+
+.dp-pattern-section .card code {
+  background-color: var(--color-overlay-light);
+  color: var(--color-primary);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .dp-pattern-tabs {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dp-approach-tabs {
+    flex-wrap: wrap;
+  }
+
+  .dp-table-row {
+    gap: 4px;
+  }
+
+  .dp-table-cell {
+    min-width: 48px;
+    padding: 8px 6px;
+  }
+
+  .dp-memo-grid {
+    gap: 6px;
+  }
+
+  .dp-memo-cell {
+    min-width: 54px;
+  }
+
+  .dp-tree-level {
+    justify-content: flex-start;
+    overflow-x: auto;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   0/1 KNAPSACK — specific styles
+   ════════════════════════════════════════════════════════════════════════════ */
+
+/* Legend bar */
+.dp-ks-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.dp-ks-item {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: var(--color-accent);
+  font-family: monospace;
+  border: 1px solid var(--color-bg-darker);
+}
+
+/* Axis hint below badge */
+.dp-ks-axis-hint {
+  font-size: 0.78rem;
+  color: var(--color-text-muted, #94a3b8);
+  margin-bottom: 8px;
+  font-style: italic;
+}
+
+/* 2D DP Table wrapper */
+.dp-ks-table-wrap {
+  overflow-x: auto;
+  margin: 12px 0;
+}
+
+.dp-ks-table-row {
+  display: flex;
+  gap: 0;
+}
+
+.dp-ks-table-header {
+  margin-bottom: 2px;
+}
+
+.dp-ks-table-cell {
+  min-width: 40px;
+  text-align: center;
+  padding: 7px 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1px solid var(--color-bg-darker);
+  background-color: var(--color-bg-darkest);
+  color: var(--color-accent);
+  transition: background 0.2s, transform 0.15s;
+}
+
+/* Row label */
+.dp-ks-label {
+  min-width: 72px;
+  font-size: 0.75rem;
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-light);
+  font-weight: 700;
+  border-right: 2px solid var(--color-primary);
+}
+
+/* Column header */
+.dp-ks-col-hdr {
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-light);
+  font-weight: 700;
+}
+
+.dp-ks-col-hdr.active-col {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.dp-ks-label.active-row {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+/* Cell states */
+.dp-ks-table-cell.filled {
+  background-color: var(--color-overlay-light);
+}
+
+.dp-ks-table-cell.active {
+  background-color: var(--color-primary);
+  color: white;
+  transform: scale(1.1);
+  z-index: 2;
+  position: relative;
+  box-shadow: 0 0 12px var(--color-overlay-strong);
+  border-color: var(--color-primary);
+}
+
+/* "from skip" source cell (row above, same col) */
+.dp-ks-table-cell.from1 {
+  background-color: rgba(59, 130, 246, 0.25);
+  border-color: #3b82f6;
+  color: #93c5fd;
+}
+
+/* "from pick" source cell (row above, shifted col) */
+.dp-ks-table-cell.from2 {
+  background-color: rgba(245, 158, 11, 0.2);
+  border-color: #f59e0b;
+  color: #fcd34d;
+}
+
+@media (max-width: 640px) {
+  .dp-ks-table-cell {
+    min-width: 32px;
+    font-size: 0.72rem;
+    padding: 5px 2px;
+  }
+  .dp-ks-label {
+    min-width: 60px;
+    font-size: 0.7rem;
+  }
+}
+
+/* ── Knapsack Item Chip (for reference) ────────────────────────────────── */
+.dp-ks-items-table {
+  margin: 12px 0;
+  padding: 10px 12px;
+  background-color: var(--color-overlay-light);
+  border-radius: 8px;
+  border-left: 4px solid var(--color-primary);
+}
+
+.dp-ks-item-chip {
+  padding: 8px 10px;
+  border-radius: 6px;
+  background-color: var(--color-bg-darkest);
+  border: 1px solid var(--color-bg-darker);
+  text-align: center;
+  font-size: 0.8rem;
+  transition: all 0.2s ease;
+  color: var(--color-accent);
+}
+
+.dp-ks-item-chip.active {
+  background-color: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 8px var(--color-overlay-strong);
+  transform: scale(1.05);
+}
+
+/* ── Call Chain — Top to Bottom Linear Flow ────────────────────────────── */
+.dp-call-chain {
+  margin: 16px 0;
+  padding: 12px;
+  background-color: var(--color-overlay-light);
+  border-radius: 8px;
+  border-left: 4px solid var(--color-primary);
+}
+
+.dp-call-node {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  margin-bottom: 2px;
+  background-color: var(--color-bg-darkest);
+  border: 1px solid var(--color-bg-darker);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.dp-call-node.active {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+  box-shadow: 0 0 12px var(--color-overlay-strong);
+  transform: scale(1.02) translateX(4px);
+}
+
+.dp-call-node.resolved {
+  opacity: 0.7;
+  background-color: var(--color-success-light, rgba(16,185,129,0.1));
+  border-color: var(--color-success);
+}
+
+.dp-call-node.base {
+  background-color: rgba(245, 158, 11, 0.15);
+  border-color: #f59e0b;
+  color: #fcd34d;
+}
+
+.dp-call-label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  font-family: monospace;
+}
+
+.dp-call-value {
+  margin-left: 12px;
+  padding: 2px 8px;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: inherit;
+}
+
+.dp-call-arrow {
+  text-align: center;
+  color: var(--color-primary);
+  font-size: 1.2rem;
+  line-height: 0.8;
+  margin: 2px 0;
+  opacity: 0.6;
+}
+
+/* ── Recursion Tree + Call Stack Layout ────────────────────────────────── */
+.dp-tree-and-stack {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 16px;
+  margin: 12px 0;
+  max-width: 100%;
+}
+
+.dp-tree-section {
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.dp-stack-panel {
+  background-color: var(--color-overlay-light);
+  border: 1px solid var(--color-bg-darker);
+  border-radius: 8px;
+  padding: 12px;
+  max-height: 400px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dp-stack-entry {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background-color: var(--color-bg-darkest);
+  border: 1px solid var(--color-bg-darker);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  font-size: 0.85rem;
+}
+
+.dp-stack-entry.active {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white;
+  box-shadow: 0 0 8px var(--color-overlay-strong);
+}
+
+.dp-stack-entry.resolved {
+  opacity: 0.6;
+  background-color: rgba(16, 185, 129, 0.1);
+  border-color: var(--color-success);
+  color: var(--color-success);
+}
+
+.dp-stack-entry.base {
+  background-color: rgba(245, 158, 11, 0.15);
+  border-color: #f59e0b;
+  color: #fcd34d;
+}
+
+.dp-stack-depth {
+  display: inline-block;
+  min-width: 24px;
+  text-align: center;
+}
+
+.dp-stack-call {
+  font-weight: 600;
+  font-family: monospace;
+  flex: 1;
+}
+
+.dp-stack-result {
+  margin-left: auto;
+  padding: 2px 6px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  font-size: 0.75rem;
+}
+
+@media (max-width: 1024px) {
+  .dp-tree-and-stack {
+    grid-template-columns: 1fr;
+  }
+  
+  .dp-stack-panel {
+    max-height: 250px;
+  }
+}
