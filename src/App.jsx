@@ -7,6 +7,7 @@ import StudyCalendar45 from './routes/StudyCalendar45'
 import StudyCalendar60 from './routes/StudyCalendar60'
 import StudyCalendar90 from './routes/StudyCalendar90'
 import StudyCalendar100 from './routes/StudyCalendar100'
+import StudyCalendar150 from './routes/StudyCalendar150'
 
 // Array Problems
 import TwoSum from './routes/problems/TwoSum'
@@ -50,6 +51,7 @@ function App() {
         <Route path="/study-calendar-60" element={<StudyCalendar60 />} />
         <Route path="/study-calendar-90" element={<StudyCalendar90 />} />
         <Route path="/study-calendar-100" element={<StudyCalendar100 />} />
+        <Route path="/study-calendar-150" element={<StudyCalendar150 />} />
         
         {/* Array */}
         <Route path="/problems/two-sum" element={<TwoSum />} />

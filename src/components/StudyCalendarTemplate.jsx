@@ -541,7 +541,25 @@ export default function StudyCalendarTemplate({
                         >
                           {/* Single row: num + title + [note] [done] */}
                           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                            <span style={{ fontSize: 9, fontFamily: 'monospace', color: 'rgba(176, 228, 204, 0.4)', flexShrink: 0 }}>#{p.num}</span>
+                            <a
+                              href={p.path}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={e => e.stopPropagation()}
+                              style={{
+                                fontSize: 9,
+                                fontFamily: 'monospace',
+                                color: 'rgba(176, 228, 204, 0.4)',
+                                flexShrink: 0,
+                                textDecoration: 'none',
+                                cursor: 'pointer',
+                                transition: 'color 0.2s ease',
+                              }}
+                              onMouseEnter={e => e.target.style.color = 'rgba(176, 228, 204, 0.8)'}
+                              onMouseLeave={e => e.target.style.color = 'rgba(176, 228, 204, 0.4)'}
+                            >
+                              #{p.num}
+                            </a>
                             <span style={{ fontSize: 11, fontWeight: 600, color: isProblemDone ? '#34d399' : catColor?.text || 'var(--color-accent)', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                               {p.title}
                             </span>

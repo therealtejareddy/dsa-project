@@ -186,7 +186,7 @@ export default function Home() {
       )}
       {/* Hero Section */}
       <div style={{ background: `linear-gradient(135deg, var(--color-primary), var(--color-bg-darker))`, color: 'var(--color-accent)', padding: '60px 30px', textAlign: 'center', borderBottom: `1px solid var(--color-border)` }}>
-        <h1 style={{ fontSize: 42, fontWeight: 800, marginBottom: 12, letterSpacing: '-0.5px' }}>🎯 DSA Visualizer</h1>
+        <h1 style={{ fontSize: 42, fontWeight: 800, marginBottom: 12, letterSpacing: '-0.5px' }}>🎯 DSA Calenders</h1>
         <p style={{ opacity: 0.9, fontSize: 18, marginBottom: 24 }}>Master the Blind 75 with interactive, step-by-step visualizations</p>
         {isAuthenticated && (
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>        
@@ -194,7 +194,8 @@ export default function Home() {
             <Link to="/study-calendar-45" style={{ padding: '8px 16px', background: 'rgba(99, 102, 241, 0.2)', borderRadius: 8, fontSize: 14, color: '#a5b4fc', textDecoration: 'none', fontWeight: 600, border: '1px solid #6366f140' }}>🗓️ 45-Day Blind 75</Link>          
             <Link to="/study-calendar-60" style={{ padding: '8px 16px', background: 'rgba(168, 85, 247, 0.2)', borderRadius: 8, fontSize: 14, color: '#c4b5fd', textDecoration: 'none', fontWeight: 600, border: '1px solid #a855f740' }}>🚀 60-Day NeetCode 150</Link>          
             <Link to="/study-calendar-90" style={{ padding: '8px 16px', background: 'rgba(239, 68, 68, 0.2)', borderRadius: 8, fontSize: 14, color: '#fca5a5', textDecoration: 'none', fontWeight: 600, border: '1px solid #ef444440' }}>🏆 90-Day Calender</Link>
-            <Link to="/study-calendar-100" style={{ padding: '8px 16px', background: 'rgba(239, 68, 68, 0.2)', borderRadius: 8, fontSize: 14, color: '#fca5a5', textDecoration: 'none', fontWeight: 600, border: '1px solid #ef444440' }}>🏆 100-Day AlgoMaster 300</Link>        
+            <Link to="/study-calendar-100" style={{ padding: '8px 16px', background: 'rgba(239, 68, 68, 0.2)', borderRadius: 8, fontSize: 14, color: '#fca5a5', textDecoration: 'none', fontWeight: 600, border: '1px solid #ef444440' }}>🏆 100-Day AlgoMaster 300</Link>
+            <Link to="/study-calendar-150" style={{ padding: '8px 16px', background: 'rgba(59, 130, 246, 0.2)', borderRadius: 8, fontSize: 14, color: '#93c5fd', textDecoration: 'none', fontWeight: 600, border: '1px solid #3b82f640' }}>⭐ 150-Day Master Plan</Link>        
           </div>
         )}
         {!isAuthenticated && (
