@@ -187,7 +187,7 @@ export default function Home() {
       {/* Hero Section */}
       <div style={{ background: `linear-gradient(135deg, var(--color-primary), var(--color-bg-darker))`, color: 'var(--color-accent)', padding: '60px 30px', textAlign: 'center', borderBottom: `1px solid var(--color-border)` }}>
         <h1 style={{ fontSize: 42, fontWeight: 800, marginBottom: 12, letterSpacing: '-0.5px' }}>🎯 DSA Calenders</h1>
-        <p style={{ opacity: 0.9, fontSize: 18, marginBottom: 24 }}>Master the Blind 75 with interactive, step-by-step visualizations</p>
+        <p style={{ opacity: 0.9, fontSize: 18, marginBottom: 24 }}>Structured learning paths for DSA mastery and system design interviews</p>
         {isAuthenticated && (
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>        
             <Link to="/study-calendar" style={{ padding: '8px 16px', background: 'rgba(16, 185, 129, 0.2)', borderRadius: 8, fontSize: 14, color: '#34d399', textDecoration: 'none', fontWeight: 600, border: '1px solid #34d39940' }}>📅 30-Day Study Plan</Link>          

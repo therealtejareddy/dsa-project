@@ -1,5 +1,6 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { AuthProvider } from './contexts/AuthContext'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { useContext } from 'react'
+import { AuthProvider, AuthContext } from './contexts/AuthContext'
 import Home from './routes/Home'
 import LoginRegister from './routes/LoginRegister'
 import StudyCalendar from './routes/StudyCalendar'
@@ -40,6 +41,12 @@ import DynamicProgramming from './routes/patterns/DynamicProgramming'
 // Placeholder for remaining Blind 75 problems
 const CommingSoon = () => <div style={{ minHeight: '100vh', background: 'var(--color-bg-darkest)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-accent)', fontSize: 24, fontWeight: 700 }}>🚀 Coming Soon</div>
 
+// Protected Route component
+function ProtectedRoute({ children }) {
+  const { user } = useContext(AuthContext)
+  return user ? children : <Navigate to="/login" replace />
+}
+
 function App() {
   return (
     <AuthProvider>
@@ -47,13 +54,13 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<LoginRegister />} />
-        <Route path="/study-calendar" element={<StudyCalendar />} />
-        <Route path="/study-calendar-45" element={<StudyCalendar45 />} />
-        <Route path="/study-calendar-60" element={<StudyCalendar60 />} />
-        <Route path="/study-calendar-90" element={<StudyCalendar90 />} />
-        <Route path="/study-calendar-100" element={<StudyCalendar100 />} />
-        <Route path="/study-calendar-150" element={<StudyCalendar150 />} />
-        <Route path="/study-calendar-system-design" element={<StudyCalendarSystemDesign />} />
+        <Route path="/study-calendar" element={<ProtectedRoute><StudyCalendar /></ProtectedRoute>} />
+        <Route path="/study-calendar-45" element={<ProtectedRoute><StudyCalendar45 /></ProtectedRoute>} />
+        <Route path="/study-calendar-60" element={<ProtectedRoute><StudyCalendar60 /></ProtectedRoute>} />
+        <Route path="/study-calendar-90" element={<ProtectedRoute><StudyCalendar90 /></ProtectedRoute>} />
+        <Route path="/study-calendar-100" element={<ProtectedRoute><StudyCalendar100 /></ProtectedRoute>} />
+        <Route path="/study-calendar-150" element={<ProtectedRoute><StudyCalendar150 /></ProtectedRoute>} />
+        <Route path="/study-calendar-system-design" element={<ProtectedRoute><StudyCalendarSystemDesign /></ProtectedRoute>} />
         
         {/* Array */}
         <Route path="/problems/two-sum" element={<TwoSum />} />
