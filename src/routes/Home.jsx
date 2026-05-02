@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { AuthContext } from '../contexts/AuthContext'
 
@@ -110,51 +110,85 @@ const PROBLEMS = [
 export default function Home() {
   const { user, logout, isAuthenticated } = useContext(AuthContext)
   const navigate = useNavigate()
+  const [profileExpanded, setProfileExpanded] = useState(false)
   const categories = [...new Set(PROBLEMS.map(p => p.category))]
   
   const handleLogout = async () => {
     await logout()
+    setProfileExpanded(false)
     navigate('/')
   }
   
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--color-bg-darkest)', fontFamily: '"Segoe UI", sans-serif', color: 'var(--color-accent)' }}>
+    <div 
+      style={{ minHeight: '100vh', background: 'var(--color-bg-darkest)', fontFamily: '"Segoe UI", sans-serif', color: 'var(--color-accent)' }}
+      onClick={() => profileExpanded && setProfileExpanded(false)}
+    >
       {/* User Header */}
       {isAuthenticated && (
         <div style={{ background: 'var(--color-bg-dark)', borderBottom: '1px solid var(--color-border)', padding: '12px 30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'var(--color-accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-bg-darkest)', fontWeight: 700, fontSize: 14 }}>
-              {user?.email?.[0]?.toUpperCase()}
-            </div>
-            <div>
-              <div style={{ fontSize: 12, color: 'rgba(176, 228, 204, 0.6)' }}>Logged in as</div>
-              <div style={{ fontSize: 14, fontWeight: 600 }}>{user?.email}</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+            <Link to="/resources" style={{ color: 'rgba(176,228,204,0.7)', textDecoration: 'none', fontSize: 13, fontWeight: 600, transition: 'all 0.2s', padding: '6px 12px', borderRadius: 6 }} onMouseEnter={(e) => { e.currentTarget.style.color = 'rgba(176,228,204,1)'; e.currentTarget.style.background = 'rgba(176,228,204,0.1)' }} onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(176,228,204,0.7)'; e.currentTarget.style.background = 'transparent' }}>📚 Resources</Link>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <div style={{ position: 'relative' }}>
+              <div 
+                style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', padding: '6px 10px', borderRadius: 8, transition: 'all 0.2s', background: profileExpanded ? 'rgba(176,228,204,0.1)' : 'transparent' }}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setProfileExpanded(!profileExpanded)
+                }}
+              >
+                <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'var(--color-accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-bg-darkest)', fontWeight: 700, fontSize: 14 }}>
+                  {user?.email?.[0]?.toUpperCase()}
+                </div>
+                <div>
+                  <div style={{ fontSize: 12, color: 'rgba(176, 228, 204, 0.6)' }}>Logged in as</div>
+                  <div style={{ fontSize: 14, fontWeight: 600 }}>{user?.email}</div>
+                </div>
+                <div style={{ fontSize: 11, color: 'rgba(176,228,204,0.5)', marginLeft: 4 }}>{profileExpanded ? '▲' : '▼'}</div>
+              </div>
+
+              {profileExpanded && (
+                <div
+                  style={{
+                    position: 'absolute', top: 'calc(100% + 6px)', right: 0,
+                    background: 'var(--color-bg-dark)',
+                    border: '1px solid var(--color-border)',
+                    borderRadius: 10,
+                    minWidth: 160,
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
+                    zIndex: 100,
+                    overflow: 'hidden',
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <button
+                    onClick={handleLogout}
+                    style={{
+                      width: '100%',
+                      padding: '12px 16px',
+                      background: 'transparent',
+                      border: 'none',
+                      color: '#fca5a5',
+                      cursor: 'pointer',
+                      fontSize: 13,
+                      fontWeight: 600,
+                      textAlign: 'left',
+                      transition: 'all 0.2s',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 8,
+                    }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(239, 68, 68, 0.15)' }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
+                  >
+                    🚪 Logout
+                  </button>
+                </div>
+              )}
             </div>
           </div>
-          <button
-            onClick={handleLogout}
-            style={{
-              padding: '8px 16px',
-              background: 'rgba(239, 68, 68, 0.15)',
-              border: '1px solid rgba(239, 68, 68, 0.3)',
-              borderRadius: 6,
-              color: '#fca5a5',
-              cursor: 'pointer',
-              fontSize: 13,
-              fontWeight: 600,
-              transition: 'all 0.2s',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'rgba(239, 68, 68, 0.25)'
-              e.currentTarget.style.borderColor = '#ef4444'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'rgba(239, 68, 68, 0.15)'
-              e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.3)'
-            }}
-          >
-            🚪 Logout
-          </button>
         </div>
       )}
       

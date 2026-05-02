@@ -3,6 +3,7 @@ import { useContext } from 'react'
 import { AuthProvider, AuthContext } from './contexts/AuthContext'
 import Home from './routes/Home'
 import LoginRegister from './routes/LoginRegister'
+import Resources from './routes/Resources'
 import StudyCalendar from './routes/StudyCalendar'
 import StudyCalendar45 from './routes/StudyCalendar45'
 import StudyCalendar60 from './routes/StudyCalendar60'
@@ -54,6 +55,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<LoginRegister />} />
+          <Route path="/resources" element={<ProtectedRoute><Resources /></ProtectedRoute>} />
         <Route path="/study-calendar" element={<ProtectedRoute><StudyCalendar /></ProtectedRoute>} />
         <Route path="/study-calendar-45" element={<ProtectedRoute><StudyCalendar45 /></ProtectedRoute>} />
         <Route path="/study-calendar-60" element={<ProtectedRoute><StudyCalendar60 /></ProtectedRoute>} />

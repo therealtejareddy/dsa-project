@@ -1,0 +1,122 @@
+{
+  "resources": [
+    {
+      "id": 1,
+      "category": "DSA",
+      "icon": "📊",
+      "links": [
+        {
+          "id": 1,
+          "title": "DSA Animator",
+          "url": "https://dsaanimator.com/"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "category": "LLD",
+      "icon": "🏗️",
+      "links": [
+        {
+          "id": 1,
+          "title": "AlgoMaster - LLD Course",
+          "url": "https://algomaster.io/learn/lld"
+        },
+        {
+          "id": 2,
+          "title": "Awesome Low-Level Design",
+          "url": "https://github.com/ashishps1/awesome-low-level-design"
+        },
+        {
+          "id": 3,
+          "title": "LLD - Code with aryan",
+          "url": "https://www.youtube.com/playlist?list=PLpxM6m39X_t-Rk9lZVVD4U6JycAAIIEDW"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "category": "HLD",
+      "icon": "🌐",
+      "links": [
+        {
+          "id": 1,
+          "title": "System Design - Gaurav Sen",
+          "url": "https://www.youtube.com/playlist?list=PLMCXHnjXnTnvo6alSjVkgxV-VH6EPyvoX"
+        },
+        {
+          "id": 2,
+          "title": "System Design Interview - Exponent",
+          "url": "https://www.youtube.com/playlist?list=PLrtCHHeadkHp92TyPt1Fj452_VGLipJnL"
+        },
+        {
+          "id": 3,
+          "title": "System Design Fundamentals - Bytebytego",
+          "url": "https://www.youtube.com/playlist?list=PLCRMIe5FDPsd0gVs500xeOewfySTsmEjf"
+        },
+        {
+          "id": 4,
+          "title": "System Design Classroom Newsletter",
+          "url": "https://newsletter.systemdesignclassroom.com/"
+        },
+        {
+          "id": 5,
+          "title": "Franco Fernando Newsletter",
+          "url": "https://newsletter.francofernando.com/"
+        },
+        {
+          "id": 6,
+          "title": "AlgoMaster Blog",
+          "url": "https://blog.algomaster.io/"
+        },
+        {
+          "id": 7,
+          "title": "SDCourse Substack",
+          "url": "https://sdcourse.substack.com/"
+        },
+        {
+          "id": 8,
+          "title": "Pragmatic Engineer Newsletter",
+          "url": "https://newsletter.pragmaticengineer.com/"
+        },
+        {
+          "id": 9,
+          "title": "System Design One Newsletter",
+          "url": "https://newsletter.systemdesign.one/"
+        },
+        {
+          "id": 10,
+          "title": "System Design Premier - sudoCODE",
+          "url": "https://www.youtube.com/playlist?list=PLTCrU9sGyburBw9wNOHebv9SjlE4Elv5a"
+        },
+        {
+          "id": 11,
+          "title": "System Design - Arpit Bhayani",
+          "url": "https://www.youtube.com/playlist?list=PLsdq-3Z1EPT27BuTnJ_trF7BsaTpYLqst"
+        },
+        {
+          "id": 12,
+          "title": "System Design Walkthroughs - Hello Interview",
+          "url": "https://www.youtube.com/playlist?list=PL5q3E8eRUieWtYLmRU3z94-vGRcwKr9tM"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "category": "Software Engineering",
+      "icon": "⚙️",
+      "links": [
+        {
+          "id": 1,
+          "title": "The T-Shaped Developer",
+          "url": "https://thetshaped.dev/"
+        },
+        {
+          "id": 2,
+          "title": "TechWorld with Milan Newsletter",
+          "url": "https://newsletter.techworld-with-milan.com/"
+        }
+      ]
+    }
+  ]
+}
