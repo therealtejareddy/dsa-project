@@ -195,7 +195,8 @@ export default function Home() {
             <Link to="/study-calendar-60" style={{ padding: '8px 16px', background: 'rgba(168, 85, 247, 0.2)', borderRadius: 8, fontSize: 14, color: '#c4b5fd', textDecoration: 'none', fontWeight: 600, border: '1px solid #a855f740' }}>🚀 60-Day NeetCode 150</Link>          
             <Link to="/study-calendar-90" style={{ padding: '8px 16px', background: 'rgba(239, 68, 68, 0.2)', borderRadius: 8, fontSize: 14, color: '#fca5a5', textDecoration: 'none', fontWeight: 600, border: '1px solid #ef444440' }}>🏆 90-Day Calender</Link>
             <Link to="/study-calendar-100" style={{ padding: '8px 16px', background: 'rgba(239, 68, 68, 0.2)', borderRadius: 8, fontSize: 14, color: '#fca5a5', textDecoration: 'none', fontWeight: 600, border: '1px solid #ef444440' }}>🏆 100-Day AlgoMaster 300</Link>
-            <Link to="/study-calendar-150" style={{ padding: '8px 16px', background: 'rgba(59, 130, 246, 0.2)', borderRadius: 8, fontSize: 14, color: '#93c5fd', textDecoration: 'none', fontWeight: 600, border: '1px solid #3b82f640' }}>⭐ 150-Day Master Plan</Link>        
+            <Link to="/study-calendar-150" style={{ padding: '8px 16px', background: 'rgba(59, 130, 246, 0.2)', borderRadius: 8, fontSize: 14, color: '#93c5fd', textDecoration: 'none', fontWeight: 600, border: '1px solid #3b82f640' }}>⭐ 150-Day Master Plan</Link>
+            <Link to="/study-calendar-system-design" style={{ padding: '8px 16px', background: 'rgba(15, 32, 39, 0.6)', borderRadius: 8, fontSize: 14, color: '#6ee7b7', textDecoration: 'none', fontWeight: 600, border: '1px solid #10b98140' }}>🏗️ 120-Day System Design</Link>        
           </div>
         )}
         {!isAuthenticated && (

@@ -1,0 +1,893 @@
+{
+  "title": "120-Day System Design Preparation Plan",
+  "totalDays": 120,
+  "phases": [
+    {
+      "phase": 1,
+      "title": "Foundations",
+      "days": "1-30",
+      "goal": "Build strong understanding of core system design concepts",
+      "weeks": [
+        {
+          "week": 1,
+          "days": "1-7",
+          "topic": "Introduction & Core Concepts",
+          "plan": [
+            {
+              "day": 1,
+              "focus": "Introduction to System Design",
+              "study": ["What is System Design?", "Top 30 System Design Concepts"],
+              "task": "Read and take notes on system design fundamentals"
+            },
+            {
+              "day": 2,
+              "focus": "Scalability & Availability",
+              "study": ["Scalability", "Availability", "Reliability"],
+              "task": "Understand horizontal vs vertical scaling patterns"
+            },
+            {
+              "day": 3,
+              "focus": "Failure & Consistency",
+              "study": ["Single Point of Failure (SPOF)", "CAP Theorem", "Consistency Models"],
+              "task": "Draw diagrams illustrating CAP theorem tradeoffs"
+            },
+            {
+              "day": 4,
+              "focus": "Performance",
+              "study": ["Latency vs Throughput vs Bandwidth", "Consistent Hashing"],
+              "task": "Practice consistent hashing examples with node additions/removals"
+            },
+            {
+              "day": 5,
+              "focus": "Networking Basics",
+              "study": ["OSI Model", "IP Address", "TCP vs UDP"],
+              "task": "Summarize each OSI layer and its role in system design"
+            },
+            {
+              "day": 6,
+              "focus": "Web Protocols",
+              "study": ["HTTP/HTTPS", "Domain Name System (DNS)", "Checksums", "Proxy vs Reverse Proxy"],
+              "task": "Trace a web request from browser to server through each layer"
+            },
+            {
+              "day": 7,
+              "focus": "Review & Practice",
+              "study": ["What are System Design Interviews?", "Types of System Design Questions", "Expectations by Level/YoE"],
+              "task": "Review week 1 notes and read about interview expectations"
+            }
+          ]
+        },
+        {
+          "week": 2,
+          "days": "8-14",
+          "topic": "Load Balancing, APIs & Caching",
+          "plan": [
+            {
+              "day": 8,
+              "focus": "Load Balancing",
+              "study": ["What are Load Balancers?", "Load Balancing Algorithms", "DNS Load Balancing", "Anycast Routing"],
+              "task": "Compare round-robin, least connections, and consistent hashing algorithms"
+            },
+            {
+              "day": 9,
+              "focus": "API Design",
+              "study": ["What is an API?", "Idempotency", "Data Formats", "API Architectural Styles"],
+              "task": "Design a simple REST API with proper idempotent operations"
+            },
+            {
+              "day": 10,
+              "focus": "REST & GraphQL",
+              "study": ["REST API Design", "GraphQL Deep Dive", "gRPC Deep Dive"],
+              "task": "Compare REST vs GraphQL vs gRPC with use case examples"
+            },
+            {
+              "day": 11,
+              "focus": "API Infrastructure & Security",
+              "study": ["API Gateways", "Rate Limiting", "Authentication vs Authorization"],
+              "task": "Design an API gateway with rate limiting and auth"
+            },
+            {
+              "day": 12,
+              "focus": "Auth Patterns",
+              "study": ["Session vs Token Based Auth", "JWT", "OAuth / OAuth2", "Single Sign-On (SSO)"],
+              "task": "Implement a token-based auth flow diagram"
+            },
+            {
+              "day": 13,
+              "focus": "Caching Fundamentals",
+              "study": ["What is Caching?", "Cache-Aside Pattern", "Read-Through vs Write-Through", "Write-Behind Cache"],
+              "task": "Implement cache-aside pattern for a read-heavy system"
+            },
+            {
+              "day": 14,
+              "focus": "Caching Strategies & Review",
+              "study": ["Caching Strategies Summary", "Cache Eviction Policies", "Cache Invalidation", "Cache Stampede", "Cache Warming"],
+              "task": "Review week 2. Draw caching architecture for a social media feed"
+            }
+          ]
+        },
+        {
+          "week": 3,
+          "days": "15-21",
+          "topic": "Databases Deep Dive",
+          "plan": [
+            {
+              "day": 15,
+              "focus": "Database Fundamentals",
+              "study": ["Database Types", "SQL vs NoSQL", "ACID Transactions"],
+              "task": "Create a comparison table of SQL vs NoSQL databases"
+            },
+            {
+              "day": 16,
+              "focus": "Relational & Document Databases",
+              "study": ["Relational Databases", "Document Databases", "Key-Value Stores"],
+              "task": "Design a schema for an e-commerce system in both SQL and NoSQL"
+            },
+            {
+              "day": 17,
+              "focus": "Specialized Databases",
+              "study": ["Wide Column Databases", "Graph Databases", "Time Series Databases", "Full-Text Search Engines", "Vector Databases"],
+              "task": "Match use cases to appropriate database types"
+            },
+            {
+              "day": 18,
+              "focus": "Database Internals",
+              "study": ["Bloom Filters", "B-Trees and B+ Trees", "LSM Trees", "How Databases Guarantee Durability"],
+              "task": "Explain how B-Trees enable fast range queries"
+            },
+            {
+              "day": 19,
+              "focus": "Database Scaling - Reads",
+              "study": ["Indexing", "Query Optimization", "Read Replicas", "Denormalization", "Materialized Views", "Connection Pooling"],
+              "task": "Design a read-heavy system with replicas and caching"
+            },
+            {
+              "day": 20,
+              "focus": "Database Scaling - Writes",
+              "study": ["Vertical Partitioning", "Sharding", "Sharding vs Partitioning", "Data Compression"],
+              "task": "Design a sharding strategy for a user database with 1B users"
+            },
+            {
+              "day": 21,
+              "focus": "Review & Technology Overview",
+              "study": ["PostgreSQL", "MySQL", "MongoDB", "Redis", "DynamoDB", "Cassandra"],
+              "task": "Review week 3. Summarize when to use each database"
+            }
+          ]
+        },
+        {
+          "week": 4,
+          "days": "22-30",
+          "topic": "Communication Patterns & Distributed Systems Intro",
+          "plan": [
+            {
+              "day": 22,
+              "focus": "Real-Time Communication",
+              "study": ["Long Polling", "WebSockets", "Server-Sent Events (SSE)", "Webhooks", "WebRTC"],
+              "task": "Compare polling vs WebSockets for a live chat application"
+            },
+            {
+              "day": 23,
+              "focus": "Async Communication",
+              "study": ["Sync vs Async Communication", "Message Queues", "Pub/Sub", "Change Data Capture (CDC)"],
+              "task": "Design an event-driven order processing system"
+            },
+            {
+              "day": 24,
+              "focus": "Messaging Reliability",
+              "study": ["Delivery Semantics", "Dead Letter Queues", "Kafka", "RabbitMQ", "SQS"],
+              "task": "Design a reliable notification system using message queues"
+            },
+            {
+              "day": 25,
+              "focus": "Storage Systems",
+              "study": ["Block vs File vs Object Storage", "Object Storage", "Distributed File Systems", "Erasure Coding"],
+              "task": "Design a file storage system like Google Drive"
+            },
+            {
+              "day": 26,
+              "focus": "CDN & Distributed Cache",
+              "study": ["Content Delivery Network (CDN)", "Distributed Cache Architecture", "Elasticsearch", "Redis", "Memcached"],
+              "task": "Design a CDN architecture for a video streaming service"
+            },
+            {
+              "day": 27,
+              "focus": "Tradeoffs",
+              "study": ["Vertical vs Horizontal Scaling", "Concurrency vs Parallelism", "Push vs Pull Architecture", "Stateful vs Stateless Architecture", "Strong vs Eventual Consistency"],
+              "task": "Analyze tradeoffs for 3 different system designs"
+            },
+            {
+              "day": 28,
+              "focus": "Must-Know Topics Review",
+              "study": ["Concepts", "Technologies", "Tradeoffs", "Data Structures"],
+              "task": "Self-quiz on all core concepts covered so far"
+            },
+            {
+              "day": 29,
+              "focus": "Answering Framework",
+              "study": ["Answering Framework", "Estimation Cheatsheet", "Diagramming Tips"],
+              "task": "Practice the RESHADED or similar framework on a simple problem"
+            },
+            {
+              "day": 30,
+              "focus": "Phase 1 Review",
+              "study": ["Choosing the Right Database"],
+              "task": "Full review of Phase 1. Create a cheat sheet of key concepts"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "phase": 2,
+      "title": "Advanced Concepts & Patterns",
+      "days": "31-70",
+      "goal": "Master distributed systems, architectural patterns, and interview patterns",
+      "weeks": [
+        {
+          "week": 5,
+          "days": "31-37",
+          "topic": "Distributed System Fundamentals",
+          "plan": [
+            {
+              "day": 31,
+              "focus": "Challenges of Distribution",
+              "study": ["Challenges of Distribution", "Network Partitions", "Split Brain Problem"],
+              "task": "Research real-world examples of split brain problems"
+            },
+            {
+              "day": 32,
+              "focus": "Failure Handling",
+              "study": ["Heartbeats", "Handling Failures in Distributed Systems"],
+              "task": "Design a failure detection system using heartbeats"
+            },
+            {
+              "day": 33,
+              "focus": "Time & Ordering",
+              "study": ["Clock Synchronization Problem", "Logical Clocks", "Lamport Timestamps", "Vector Clocks"],
+              "task": "Trace through a vector clock example with 3 nodes"
+            },
+            {
+              "day": 34,
+              "focus": "Consensus",
+              "study": ["Consensus Algorithms", "Paxos Algorithm", "Raft Algorithm"],
+              "task": "Explain Raft leader election in your own words"
+            },
+            {
+              "day": 35,
+              "focus": "Coordination",
+              "study": ["Leader Election", "Gossip Protocol", "Zookeeper"],
+              "task": "Design a leader election system for a distributed cluster"
+            },
+            {
+              "day": 36,
+              "focus": "Distributed Transactions",
+              "study": ["The Problem with Distributed Transactions", "Two-Phase Commit (2PC)", "Three-Phase Commit (3PC)"],
+              "task": "Explain the problems 3PC solves over 2PC"
+            },
+            {
+              "day": 37,
+              "focus": "Saga & Outbox Patterns",
+              "study": ["SAGA Pattern", "Outbox Pattern"],
+              "task": "Design a SAGA for an e-commerce order with multiple services"
+            }
+          ]
+        },
+        {
+          "week": 6,
+          "days": "38-44",
+          "topic": "Architectural Patterns & Microservices",
+          "plan": [
+            {
+              "day": 38,
+              "focus": "Architecture Styles",
+              "study": ["Client-Server Architecture", "Monolithic Architecture", "Microservices Architecture", "Serverless Architecture"],
+              "task": "When would you choose monolith over microservices? Write a detailed answer"
+            },
+            {
+              "day": 39,
+              "focus": "Event-Driven & CQRS",
+              "study": ["Event-Driven Architecture", "CQRS", "Event Sourcing"],
+              "task": "Design an event-sourced banking system"
+            },
+            {
+              "day": 40,
+              "focus": "P2P & Microservices Patterns",
+              "study": ["Peer-to-Peer (P2P)", "Service Discovery", "API Gateway Pattern", "Backend for Frontend (BFF)"],
+              "task": "Design a service discovery mechanism for 50 microservices"
+            },
+            {
+              "day": 41,
+              "focus": "Resilience Patterns",
+              "study": ["Circuit Breaker Pattern", "Bulkhead Pattern", "Sidecar Pattern"],
+              "task": "Implement circuit breaker pattern for a payment service"
+            },
+            {
+              "day": 42,
+              "focus": "Migration & Mesh",
+              "study": ["Strangler Fig Pattern", "Service Mesh"],
+              "task": "Plan a monolith-to-microservices migration using strangler fig"
+            },
+            {
+              "day": 43,
+              "focus": "Big Data Processing",
+              "study": ["Batch vs Stream Processing", "MapReduce", "ETL Pipelines", "Flink", "Spark"],
+              "task": "Design a data pipeline for processing 1M events/second"
+            },
+            {
+              "day": 44,
+              "focus": "Data Architecture",
+              "study": ["Data Lakes", "Data Warehousing", "Data Lakehouse", "Lambda Architecture", "Kappa Architecture", "Streaming Engines"],
+              "task": "Compare Lambda vs Kappa architecture for a real-time analytics system"
+            }
+          ]
+        },
+        {
+          "week": 7,
+          "days": "45-51",
+          "topic": "Data Structures for Scale & Observability",
+          "plan": [
+            {
+              "day": 45,
+              "focus": "Geospatial Data Structures",
+              "study": ["Geohash", "Quad Trees", "R-Trees"],
+              "task": "Explain how Geohash enables proximity searches"
+            },
+            {
+              "day": 46,
+              "focus": "Probabilistic Data Structures",
+              "study": ["Skip Lists", "Merkle Trees", "HyperLogLog", "Count-Min Sketch", "Bloom Filters"],
+              "task": "Design a system to count unique visitors with HyperLogLog"
+            },
+            {
+              "day": 47,
+              "focus": "Observability",
+              "study": ["Three Pillars of Observability", "Logging Best Practices", "Log Aggregation", "Correlation IDs"],
+              "task": "Design a logging system for a distributed application"
+            },
+            {
+              "day": 48,
+              "focus": "Metrics & Alerting",
+              "study": ["Metrics & Instrumentation", "Alert & Monitoring", "Dashboards & Runbooks", "Distributed Tracing", "Prometheus"],
+              "task": "Define SLIs, SLOs, and SLAs for a payment service"
+            },
+            {
+              "day": 49,
+              "focus": "Security",
+              "study": ["SSL/TLS Deep Dive", "RBAC", "Secrets Management", "SAML"],
+              "task": "Design a secrets management system for a cloud application"
+            },
+            {
+              "day": 50,
+              "focus": "Nginx, Docker & Kubernetes",
+              "study": ["Nginx", "Docker", "Kubernetes"],
+              "task": "Design a containerized microservices deployment on Kubernetes"
+            },
+            {
+              "day": 51,
+              "focus": "Phase 2 Mid-Review",
+              "study": ["AWS Lambda", "S3"],
+              "task": "Review weeks 5-7. Practice explaining 3 architectural patterns"
+            }
+          ]
+        },
+        {
+          "week": 8,
+          "days": "52-58",
+          "topic": "Interview Patterns - Part 1",
+          "plan": [
+            {
+              "day": 52,
+              "focus": "Traffic Patterns",
+              "study": ["High Read Traffic", "High Write Traffic", "Handling Traffic Spikes"],
+              "task": "Design a system handling 100K reads/sec and 10K writes/sec"
+            },
+            {
+              "day": 53,
+              "focus": "Realtime & Fanout",
+              "study": ["Realtime Updates", "Fanout Pattern"],
+              "task": "Design a news feed with fanout-on-write vs fanout-on-read"
+            },
+            {
+              "day": 54,
+              "focus": "Hot Keys & Large Files",
+              "study": ["Handling Hot Keys", "Handling Large Files"],
+              "task": "Design a solution for hot key problem in a social media system"
+            },
+            {
+              "day": 55,
+              "focus": "Media & Location",
+              "study": ["Media Streaming", "Handling Location Data"],
+              "task": "Design a media streaming system with adaptive bitrate"
+            },
+            {
+              "day": 56,
+              "focus": "IDs & Counting",
+              "study": ["Generating Unique IDs", "Distributed Counting"],
+              "task": "Design a distributed ID generator like Twitter Snowflake"
+            },
+            {
+              "day": 57,
+              "focus": "Failures & Deduplication",
+              "study": ["Failure Detection", "Handling Failures", "Deduplicating Data"],
+              "task": "Design a system with exactly-once message processing"
+            },
+            {
+              "day": 58,
+              "focus": "Advanced Patterns",
+              "study": ["Leader Election", "Recommendations", "Multi-Tenancy", "Multi-Region Architecture", "Distributed Transactions", "Removing Single Points of Failure"],
+              "task": "Design a multi-region active-active architecture"
+            }
+          ]
+        },
+        {
+          "week": 9,
+          "days": "59-65",
+          "topic": "Technology Deep Dives",
+          "plan": [
+            {
+              "day": 59,
+              "focus": "SQL Databases",
+              "study": ["PostgreSQL", "MySQL"],
+              "task": "Deep dive: PostgreSQL replication and partitioning strategies"
+            },
+            {
+              "day": 60,
+              "focus": "NoSQL Databases",
+              "study": ["MongoDB", "DynamoDB", "Cassandra"],
+              "task": "Compare DynamoDB vs Cassandra for a high-write workload"
+            },
+            {
+              "day": 61,
+              "focus": "Cache & Search",
+              "study": ["Redis", "Memcached", "Elasticsearch"],
+              "task": "Design a search-as-you-type feature with Elasticsearch"
+            },
+            {
+              "day": 62,
+              "focus": "Messaging Systems",
+              "study": ["Kafka", "RabbitMQ", "SQS"],
+              "task": "Compare Kafka vs SQS for an event streaming pipeline"
+            },
+            {
+              "day": 63,
+              "focus": "Processing Engines",
+              "study": ["Flink", "Spark"],
+              "task": "Design a real-time analytics pipeline using Flink"
+            },
+            {
+              "day": 64,
+              "focus": "Cloud Infrastructure",
+              "study": ["S3", "AWS Lambda"],
+              "task": "Design a serverless image processing pipeline"
+            },
+            {
+              "day": 65,
+              "focus": "Week 9 Review",
+              "study": ["Zookeeper", "Prometheus"],
+              "task": "Review all technologies. Create a technology selection guide"
+            }
+          ]
+        },
+        {
+          "week": 10,
+          "days": "66-70",
+          "topic": "Phase 2 Review & Mock Interviews",
+          "plan": [
+            {
+              "day": 66,
+              "focus": "Concept Deep Dives Review",
+              "study": ["Networking", "Caching", "API Design", "Database Design", "Distributed Systems"],
+              "task": "Revisit all concept deep dive notes and fill gaps"
+            },
+            {
+              "day": 67,
+              "focus": "Mock Interview 1",
+              "study": ["Design URL Shortener"],
+              "task": "Full mock interview: Design URL Shortener (45 min). Self-evaluate"
+            },
+            {
+              "day": 68,
+              "focus": "Mock Interview 2",
+              "study": ["Design Pastebin"],
+              "task": "Full mock interview: Design Pastebin (45 min). Self-evaluate"
+            },
+            {
+              "day": 69,
+              "focus": "Interview Tips Review",
+              "study": ["Answering Framework", "Estimation Cheatsheet", "Diagramming Tips", "Choosing the Right Database"],
+              "task": "Refine your interview answering framework"
+            },
+            {
+              "day": 70,
+              "focus": "Phase 2 Wrap-up",
+              "study": [],
+              "task": "Comprehensive review of Phase 2. Update cheat sheets"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "phase": 3,
+      "title": "Interview Question Practice",
+      "days": "71-110",
+      "goal": "Practice designing real-world systems from interview questions",
+      "weeks": [
+        {
+          "week": 11,
+          "days": "71-77",
+          "topic": "Real-Time Communication Systems",
+          "plan": [
+            {
+              "day": 71,
+              "focus": "Design WhatsApp",
+              "study": ["Design WhatsApp"],
+              "task": "Design WhatsApp: focus on messaging at scale, end-to-end encryption, presence"
+            },
+            {
+              "day": 72,
+              "focus": "Design Slack",
+              "study": ["Design Slack"],
+              "task": "Design Slack: focus on channels, workspaces, search, notifications"
+            },
+            {
+              "day": 73,
+              "focus": "Design Live Comments",
+              "study": ["Design Live Comments"],
+              "task": "Design Live Comments: WebSockets, fan-out, ordering, scale"
+            },
+            {
+              "day": 74,
+              "focus": "Design Google Docs",
+              "study": ["Design Google Docs"],
+              "task": "Design Google Docs: OT/CRDT for collaborative editing, conflict resolution"
+            },
+            {
+              "day": 75,
+              "focus": "Design Zoom",
+              "study": ["Design Zoom"],
+              "task": "Design Zoom: WebRTC, SFU vs MCU, recording, screen sharing"
+            },
+            {
+              "day": 76,
+              "focus": "Design Instagram",
+              "study": ["Design Instagram"],
+              "task": "Design Instagram: photo upload, feed generation, stories, CDN"
+            },
+            {
+              "day": 77,
+              "focus": "Mock Interview",
+              "study": [],
+              "task": "Mock interview: Pick one real-time system. 45 min timed practice"
+            }
+          ]
+        },
+        {
+          "week": 12,
+          "days": "78-84",
+          "topic": "Social Media & Media Streaming",
+          "plan": [
+            {
+              "day": 78,
+              "focus": "Design FB News Feed",
+              "study": ["Design FB News Feed"],
+              "task": "Design Facebook News Feed: fanout strategies, ranking, ads"
+            },
+            {
+              "day": 79,
+              "focus": "Design TikTok",
+              "study": ["Design TikTok"],
+              "task": "Design TikTok: video upload, recommendation engine, live stream"
+            },
+            {
+              "day": 80,
+              "focus": "Design Reddit",
+              "study": ["Design Reddit"],
+              "task": "Design Reddit: voting, ranking, communities, feed"
+            },
+            {
+              "day": 81,
+              "focus": "Design Tinder",
+              "study": ["Design Tinder"],
+              "task": "Design Tinder: geolocation matching, swipe system, notifications"
+            },
+            {
+              "day": 82,
+              "focus": "Design YouTube",
+              "study": ["Design YouTube"],
+              "task": "Design YouTube: video processing pipeline, CDN, recommendations"
+            },
+            {
+              "day": 83,
+              "focus": "Design Netflix",
+              "study": ["Design Netflix"],
+              "task": "Design Netflix: content delivery, encoding, recommendation, A/B testing"
+            },
+            {
+              "day": 84,
+              "focus": "Mock Interview",
+              "study": [],
+              "task": "Mock interview: Pick one social media system. 45 min timed practice"
+            }
+          ]
+        },
+        {
+          "week": 13,
+          "days": "85-91",
+          "topic": "Media, Location & Search Systems",
+          "plan": [
+            {
+              "day": 85,
+              "focus": "Design Spotify",
+              "study": ["Design Spotify"],
+              "task": "Design Spotify: audio streaming, offline mode, recommendations"
+            },
+            {
+              "day": 86,
+              "focus": "Design Google Drive & Gmail",
+              "study": ["Design Google Drive", "Design Gmail"],
+              "task": "Design Google Drive: chunked upload, sync, sharing, versioning"
+            },
+            {
+              "day": 87,
+              "focus": "Design Twitch",
+              "study": ["Design Twitch"],
+              "task": "Design Twitch: live streaming, chat, VOD, clips"
+            },
+            {
+              "day": 88,
+              "focus": "Design Uber",
+              "study": ["Design Uber"],
+              "task": "Design Uber: real-time matching, geolocation, surge pricing, trips"
+            },
+            {
+              "day": 89,
+              "focus": "Design Airbnb & Food Delivery",
+              "study": ["Design Airbnb", "Design Food Delivery Service"],
+              "task": "Design Airbnb: search, booking, availability calendar, payments"
+            },
+            {
+              "day": 90,
+              "focus": "Design Google Maps",
+              "study": ["Design Google Maps"],
+              "task": "Design Google Maps: routing, real-time traffic, map tiles, ETA"
+            },
+            {
+              "day": 91,
+              "focus": "Design Search Systems",
+              "study": ["Design Search Autocomplete System", "Design Google Search", "Design Web Crawler"],
+              "task": "Design Google Search autocomplete with trie and ranking"
+            }
+          ]
+        },
+        {
+          "week": 14,
+          "days": "92-98",
+          "topic": "E-commerce, Payments & Infrastructure",
+          "plan": [
+            {
+              "day": 92,
+              "focus": "Design Amazon",
+              "study": ["Design Amazon"],
+              "task": "Design Amazon: product catalog, cart, orders, inventory, search"
+            },
+            {
+              "day": 93,
+              "focus": "Design Flash Sale & Auction",
+              "study": ["Design Flash Sale", "Design Online Auction System"],
+              "task": "Design Flash Sale: inventory locking, queue, preventing overselling"
+            },
+            {
+              "day": 94,
+              "focus": "Design Movie Booking & Shopify",
+              "study": ["Design Movie Booking System", "Design Shopify"],
+              "task": "Design Movie Booking: seat reservation, concurrent booking, payment"
+            },
+            {
+              "day": 95,
+              "focus": "Design Payment Systems",
+              "study": ["Design Payment System", "Design Digital Wallet", "Design Stock Exchange"],
+              "task": "Design a payment system: idempotency, exactly-once, reconciliation"
+            },
+            {
+              "day": 96,
+              "focus": "Design Infrastructure - Part 1",
+              "study": ["Design Load Balancer", "Design API Gateway", "Design Rate Limiter"],
+              "task": "Design a distributed rate limiter using token bucket algorithm"
+            },
+            {
+              "day": 97,
+              "focus": "Design Infrastructure - Part 2",
+              "study": ["Design Key-Value Store", "Design Distributed Cache", "Design CDN"],
+              "task": "Design a distributed key-value store like DynamoDB"
+            },
+            {
+              "day": 98,
+              "focus": "Mock Interview",
+              "study": [],
+              "task": "Mock interview: Pick one e-commerce or infra system. 45 min timed"
+            }
+          ]
+        },
+        {
+          "week": 15,
+          "days": "99-105",
+          "topic": "Infrastructure, Counting & Async Systems",
+          "plan": [
+            {
+              "day": 99,
+              "focus": "Design Storage & Messaging",
+              "study": ["Design Object Storage like S3", "Design Messaging Queue", "Design Time Series Database"],
+              "task": "Design an object storage system: chunking, replication, metadata"
+            },
+            {
+              "day": 100,
+              "focus": "Design Locking Service",
+              "study": ["Design Locking Service"],
+              "task": "Design distributed locking with Redlock or ZooKeeper"
+            },
+            {
+              "day": 101,
+              "focus": "Design Counting & Ranking",
+              "study": ["Design Likes Counting System", "Design Real Time Leaderboard", "Design Top K"],
+              "task": "Design a real-time leaderboard using sorted sets in Redis"
+            },
+            {
+              "day": 102,
+              "focus": "Design Aggregation",
+              "study": ["Design Ad Click Aggregator", "Design News Aggregator"],
+              "task": "Design Ad Click Aggregator: stream processing, deduplication, billing"
+            },
+            {
+              "day": 103,
+              "focus": "Design Async Systems",
+              "study": ["Design Notification Service", "Design Job Scheduler"],
+              "task": "Design a notification service: email, push, SMS with priority queues"
+            },
+            {
+              "day": 104,
+              "focus": "Design DevOps Systems",
+              "study": ["Design CI/CD Pipeline", "Design Monitoring and Alerting System"],
+              "task": "Design a CI/CD pipeline for 100 microservices"
+            },
+            {
+              "day": 105,
+              "focus": "Design Specialized Systems",
+              "study": ["Design LeetCode", "Design Calendar System", "Design Online Chess"],
+              "task": "Design LeetCode: code execution sandbox, test running, submissions"
+            }
+          ]
+        },
+        {
+          "week": 16,
+          "days": "106-110",
+          "topic": "Phase 3 Review & Mock Interviews",
+          "plan": [
+            {
+              "day": 106,
+              "focus": "Mock Interview - Infra",
+              "study": [],
+              "task": "Mock interview: Design a distributed cache (45 min). Record and review"
+            },
+            {
+              "day": 107,
+              "focus": "Mock Interview - Social",
+              "study": [],
+              "task": "Mock interview: Design Twitter (45 min). Record and review"
+            },
+            {
+              "day": 108,
+              "focus": "Mock Interview - Real-Time",
+              "study": [],
+              "task": "Mock interview: Design a ride-sharing app (45 min). Record and review"
+            },
+            {
+              "day": 109,
+              "focus": "Weak Area Review",
+              "study": [],
+              "task": "Identify 3 weak areas from mock interviews and study them in depth"
+            },
+            {
+              "day": 110,
+              "focus": "Phase 3 Wrap-up",
+              "study": [],
+              "task": "Full review of all interview questions practiced. Update notes"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "phase": 4,
+      "title": "Final Preparation & Polish",
+      "days": "111-120",
+      "goal": "Solidify knowledge, refine communication, and simulate real interviews",
+      "weeks": [
+        {
+          "week": 17,
+          "days": "111-116",
+          "topic": "Intensive Mock Interviews",
+          "plan": [
+            {
+              "day": 111,
+              "focus": "Mock Interview - Storage",
+              "study": [],
+              "task": "Mock interview: Design Google Drive (45 min) with a peer or recording"
+            },
+            {
+              "day": 112,
+              "focus": "Mock Interview - Streaming",
+              "study": [],
+              "task": "Mock interview: Design YouTube (45 min) with a peer or recording"
+            },
+            {
+              "day": 113,
+              "focus": "Mock Interview - Infra",
+              "study": [],
+              "task": "Mock interview: Design a rate limiter (45 min). Focus on deep dives"
+            },
+            {
+              "day": 114,
+              "focus": "Mock Interview - Messaging",
+              "study": [],
+              "task": "Mock interview: Design WhatsApp (45 min). Focus on scale and reliability"
+            },
+            {
+              "day": 115,
+              "focus": "Mock Interview - E-commerce",
+              "study": [],
+              "task": "Mock interview: Design Amazon checkout (45 min). Focus on payments"
+            },
+            {
+              "day": 116,
+              "focus": "Gap Analysis",
+              "study": [],
+              "task": "Review all mock interview feedback. List remaining gaps to fill"
+            }
+          ]
+        },
+        {
+          "week": 18,
+          "days": "117-120",
+          "topic": "Final Review & Confidence Building",
+          "plan": [
+            {
+              "day": 117,
+              "focus": "Core Concepts Blitz",
+              "study": [],
+              "task": "Speed-run all core concepts. 5-min explanation per topic"
+            },
+            {
+              "day": 118,
+              "focus": "System Design Cheat Sheets",
+              "study": [],
+              "task": "Finalize cheat sheets: databases, caching, messaging, patterns"
+            },
+            {
+              "day": 119,
+              "focus": "Final Mock Interview",
+              "study": [],
+              "task": "Final full mock interview: random topic picked by a peer (45 min)"
+            },
+            {
+              "day": 120,
+              "focus": "Review & Confidence",
+              "study": [],
+              "task": "Light review of notes. Rest and trust your preparation. You're ready!"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "tips": [
+    "Spend the first 5 minutes of any design problem clarifying requirements",
+    "Always estimate scale: users, requests/sec, storage before diving in",
+    "Draw diagrams for every system you design",
+    "Identify bottlenecks and propose solutions proactively",
+    "Practice explaining tradeoffs, not just making decisions",
+    "Review your mock interviews and look for gaps in depth",
+    "Focus on understanding concepts deeply rather than memorizing solutions"
+  ]
+}
