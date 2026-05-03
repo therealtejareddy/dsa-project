@@ -262,3 +262,76 @@ export async function getCompletedProblems(userId) {
     return new Set()
   }
 }
+
+/**
+ * Save system design calendar data to Firestore
+ * Stores day notes, topic notes, topic completion, and day completion in dedicated subcollection
+ */
+export async function saveSystemDesignData(userId, calendarId, data) {
+  try {
+    if (!db || !userId) {
+      console.warn('Firestore not configured.')
+      return false
+    }
+
+    const docRef = doc(db, 'users', userId, 'systemDesign', calendarId)
+    
+    await setDoc(docRef, {
+      calendarId,
+      dayNotes: data.dayNotes || {},
+      topicNotes: data.topicNotes || {},
+      completedTopics: Array.from(data.completedTopics || []),
+      completedDays: Array.from(data.completedDays || []),
+      lastUpdated: new Date().toISOString(),
+    }, { merge: true })
+
+    return true
+  } catch (error) {
+    console.error('Error saving system design data:', error)
+    return false
+  }
+}
+
+/**
+ * Load system design calendar data from Firestore
+ */
+export async function getSystemDesignData(userId, calendarId) {
+  try {
+    if (!db || !userId) {
+      return {
+        dayNotes: {},
+        topicNotes: {},
+        completedTopics: new Set(),
+        completedDays: new Set(),
+      }
+    }
+
+    const docRef = doc(db, 'users', userId, 'systemDesign', calendarId)
+    const docSnap = await getDoc(docRef)
+
+    if (docSnap.exists()) {
+      const data = docSnap.data()
+      return {
+        dayNotes: data.dayNotes || {},
+        topicNotes: data.topicNotes || {},
+        completedTopics: new Set(data.completedTopics || []),
+        completedDays: new Set(data.completedDays || []),
+      }
+    }
+
+    return {
+      dayNotes: {},
+      topicNotes: {},
+      completedTopics: new Set(),
+      completedDays: new Set(),
+    }
+  } catch (error) {
+    console.error('Error loading system design data:', error)
+    return {
+      dayNotes: {},
+      topicNotes: {},
+      completedTopics: new Set(),
+      completedDays: new Set(),
+    }
+  }
+}

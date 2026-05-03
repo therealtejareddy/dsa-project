@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../contexts/AuthContext'
-import { saveCalendarStatus, getCalendarStatus, saveProblemNote as saveProblemNoteToFB, getPatternProblems } from '../services/firestoreService'
+import { getSystemDesignData, saveSystemDesignData } from '../services/firestoreService'
 import sdData from '../data/system-design-120-days.json'
 
 // ── Color palette per phase ──────────────────────────────────────────────────
@@ -94,34 +94,11 @@ export default function StudyCalendarSystemDesign() {
       if (user) {
         try {
           setLoading(true)
-          const [savedDays, allRecords] = await Promise.all([
-            getCalendarStatus(user.uid, CALENDAR_ID),
-            getPatternProblems(user.uid, CALENDAR_ID),
-          ])
-          setCompletedDays(savedDays)
-          
-          const dayNotesMap = {}
-          const topicNotesMap = {}
-          const completedTopicsSet = new Set()
-          
-          allRecords.forEach(record => {
-            // Daily notes: format sd-120-day-notes-{dayNum}
-            if (record.id?.startsWith(`${CALENDAR_ID}-day-notes-`)) {
-              dayNotesMap[record.id] = record.userNote || ''
-            }
-            // Topic notes: format sd-120-topic-notes-{dayNum}-{topicIdx}
-            else if (record.id?.startsWith(`${CALENDAR_ID}-topic-notes-`)) {
-              topicNotesMap[record.id] = record.userNote || ''
-            }
-            // Topic completion: format sd-120-topic-completed-{dayNum}-{topicIdx}
-            else if (record.id?.startsWith(`${CALENDAR_ID}-topic-completed-`)) {
-              completedTopicsSet.add(record.id)
-            }
-          })
-          
-          setDayNotes(dayNotesMap)
-          setTopicNotes(topicNotesMap)
-          setCompletedTopics(completedTopicsSet)
+          const data = await getSystemDesignData(user.uid, CALENDAR_ID)
+          setCompletedDays(data.completedDays)
+          setCompletedTopics(data.completedTopics)
+          setDayNotes(data.dayNotes)
+          setTopicNotes(data.topicNotes)
         } catch (e) {
           console.error('Failed to load SD calendar progress', e)
         } finally {
@@ -134,80 +111,19 @@ export default function StudyCalendarSystemDesign() {
     load()
   }, [user])
 
-  // ── Save progress ──────────────────────────────────────────────────────────
+  // ── Save all progress to Firestore ─────────────────────────────────────────
   useEffect(() => {
     if (!user) return
     const t = setTimeout(() => {
-      saveCalendarStatus(user.uid, CALENDAR_ID, completedDays).catch(e =>
-        console.error('Failed to save SD calendar progress', e)
-      )
+      saveSystemDesignData(user.uid, CALENDAR_ID, {
+        dayNotes,
+        topicNotes,
+        completedTopics,
+        completedDays,
+      }).catch(e => console.error('Failed to save SD calendar progress', e))
     }, 1000)
     return () => clearTimeout(t)
-  }, [user, completedDays])
-
-  // ── Save day notes ─────────────────────────────────────────────────────
-  useEffect(() => {
-    if (!user) return
-    const t = setTimeout(async () => {
-      try {
-        for (const [key, noteContent] of Object.entries(dayNotes)) {
-          if (noteContent) {
-            await saveProblemNoteToFB(user.uid, CALENDAR_ID, {
-              id: key,
-              title: `Day Notes - ${key}`,
-              userNote: noteContent,
-              completed: false,
-            })
-          }
-        }
-      } catch (e) {
-        console.error('Failed to save day notes', e)
-      }
-    }, 1000)
-    return () => clearTimeout(t)
-  }, [user, dayNotes])
-
-  // ── Save topic notes ────────────────────────────────────────────────────
-  useEffect(() => {
-    if (!user) return
-    const t = setTimeout(async () => {
-      try {
-        for (const [key, noteContent] of Object.entries(topicNotes)) {
-          if (noteContent) {
-            await saveProblemNoteToFB(user.uid, CALENDAR_ID, {
-              id: key,
-              title: `Topic Notes - ${key}`,
-              userNote: noteContent,
-              completed: false,
-            })
-          }
-        }
-      } catch (e) {
-        console.error('Failed to save topic notes', e)
-      }
-    }, 1000)
-    return () => clearTimeout(t)
-  }, [user, topicNotes])
-
-  // ── Save completed topics status ────────────────────────────────────────
-  useEffect(() => {
-    if (!user) return
-    const t = setTimeout(async () => {
-      try {
-        for (const topicCompletedKey of completedTopics) {
-          await saveProblemNoteToFB(user.uid, CALENDAR_ID, {
-            id: topicCompletedKey,
-            title: `Topic Completed - ${topicCompletedKey}`,
-            userNote: '',
-            completed: true,
-          })
-        }
-      } catch (e) {
-        console.error('Failed to save topic completion status', e)
-      }
-    }, 1000)
-    return () => clearTimeout(t)
-  }, [user, completedTopics])
+  }, [user, dayNotes, topicNotes, completedTopics, completedDays])
 
   const toggleComplete = dayNum => {
     setCompletedDays(prev => {
