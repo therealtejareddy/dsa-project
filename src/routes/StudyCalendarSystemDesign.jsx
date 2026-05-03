@@ -141,34 +141,36 @@ export default function StudyCalendarSystemDesign() {
     const key = topicCompletedKey(dayNum, topicIdx)
     setCompletedTopics(prevTopics => {
       const nextTopics = new Set(prevTopics)
-      if (nextTopics.has(key)) {
-        nextTopics.delete(key)
-      } else {
-        nextTopics.add(key)
-      }
-      
-      // Check if all topics for this day are complete
-      const entry = DAY_MAP[dayNum]
-      if (entry && entry.study.length > 0) {
-        const allTopicsComplete = entry.study.every((_, idx) => 
-          nextTopics.has(topicCompletedKey(dayNum, idx))
-        )
-        
-        // Auto-update day completion status based on topics
-        setCompletedDays(prevDays => {
-          const nextDays = new Set(prevDays)
-          if (allTopicsComplete) {
-            nextDays.add(dayNum)
-          } else {
-            nextDays.delete(dayNum)
-          }
-          return nextDays
-        })
-      }
-      
+      nextTopics.has(key) ? nextTopics.delete(key) : nextTopics.add(key)
       return nextTopics
     })
   }
+
+  // Auto-update day completion when topics change
+  useEffect(() => {
+    if (!DAY_MAP || Object.keys(DAY_MAP).length === 0) return
+    
+    setCompletedDays(prevDays => {
+      const nextDays = new Set(prevDays)
+      
+      // Check each day to see if all its topics are complete
+      Object.values(DAY_MAP).forEach(entry => {
+        if (entry && entry.study && entry.study.length > 0) {
+          const allTopicsComplete = entry.study.every((_, idx) => 
+            completedTopics.has(topicCompletedKey(entry.day, idx))
+          )
+          
+          if (allTopicsComplete) {
+            nextDays.add(entry.day)
+          } else {
+            nextDays.delete(entry.day)
+          }
+        }
+      })
+      
+      return nextDays
+    })
+  }, [completedTopics])
 
   const openNoteEditor = () => {
     setNoteText(dayNotes[dayNoteKey(selectedDay)] || '')
