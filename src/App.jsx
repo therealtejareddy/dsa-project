@@ -44,7 +44,8 @@ const CommingSoon = () => <div style={{ minHeight: '100vh', background: 'var(--c
 
 // Protected Route component
 function ProtectedRoute({ children }) {
-  const { user } = useContext(AuthContext)
+  const { user, loading } = useContext(AuthContext)
+  if (loading) return null
   return user ? children : <Navigate to="/login" replace />
 }
 
