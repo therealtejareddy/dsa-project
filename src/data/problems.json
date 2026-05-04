@@ -689,14 +689,6 @@
       "path": "https://leetcode.com/problems/symmetric-tree"
     },
     {
-      "id": 87,
-      "title": "Binary Tree Level Order",
-      "difficulty": "Medium",
-      "category": "Tree",
-      "num": 102,
-      "path": "https://leetcode.com/problems/binary-tree-level-order-traversal"
-    },
-    {
       "id": 88,
       "title": "Binary Tree Level Order Traversal",
       "difficulty": "Medium",
@@ -809,28 +801,12 @@
       "path": "https://leetcode.com/problems/distinct-subsequences"
     },
     {
-      "id": 102,
-      "title": "Best Time Buy Sell Stock",
-      "difficulty": "Easy",
-      "category": "Greedy",
-      "num": 121,
-      "path": "https://leetcode.com/problems/best-time-buy-sell-stock"
-    },
-    {
       "id": 103,
       "title": "Best Time to Buy and Sell Stock",
       "difficulty": "Easy",
       "category": "Greedy",
       "num": 121,
-      "path": "https://leetcode.com/problems/best-time-buy-sell-stock"
-    },
-    {
-      "id": 104,
-      "title": "Best Time Buy Sell Stock II",
-      "difficulty": "Medium",
-      "category": "Greedy",
-      "num": 122,
-      "path": "https://leetcode.com/problems/best-time-buy-sell-stock-ii"
+      "path": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock"
     },
     {
       "id": 105,
@@ -838,7 +814,7 @@
       "difficulty": "Medium",
       "category": "Greedy",
       "num": 122,
-      "path": "https://leetcode.com/problems/best-time-buy-sell-stock-ii"
+      "path": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii"
     },
     {
       "id": 106,
@@ -846,7 +822,7 @@
       "difficulty": "Hard",
       "category": "DP",
       "num": 123,
-      "path": "https://leetcode.com/problems/best-time-buy-sell-stock-iii"
+      "path": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii"
     },
     {
       "id": 107,

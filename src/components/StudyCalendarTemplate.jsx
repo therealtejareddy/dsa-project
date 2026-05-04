@@ -93,6 +93,7 @@ export default function StudyCalendarTemplate({
   const [noteText, setNoteText] = useState('')
   const [editingDayNote, setEditingDayNote] = useState(false)
   const [dayNoteText, setDayNoteText] = useState('')
+  const [isInitialLoad, setIsInitialLoad] = useState(true)
   const { user } = useContext(AuthContext)
 
   // Load calendar status from Firestore when component mounts or user changes
@@ -110,7 +111,7 @@ export default function StudyCalendarTemplate({
           ])
           setCompletedDays(savedDays)
           setCompletedProblems(savedProblems)
-          // Convert problem notes array to object format
+          // Convert problem notes array to object format (already filtered by calendar via patternType)
           const problemNotesObj = {}
           allProblemNotes.forEach(pn => {
             problemNotesObj[pn.id] = pn.userNote || ''
@@ -130,10 +131,12 @@ export default function StudyCalendarTemplate({
           // Continue without Firebase sync
         } finally {
           setLoading(false)
+          setIsInitialLoad(false)
         }
       } else {
         setCompletedDays(new Set())
         setLoading(false)
+        setIsInitialLoad(false)
       }
     }
     loadProgress()
@@ -180,7 +183,10 @@ export default function StudyCalendarTemplate({
   }
 
   // Auto-mark day as complete if all its problems are completed
+  // Only run after initial load to preserve saved calendar state
   useEffect(() => {
+    if (isInitialLoad) return
+    
     setCompletedDays(prevDays => {
       const nextDays = new Set(prevDays)
       
@@ -195,7 +201,7 @@ export default function StudyCalendarTemplate({
       
       return nextDays
     })
-  }, [completedProblems, resolvedDays])
+  }, [completedProblems, resolvedDays, isInitialLoad])
 
   const toggleComplete = (day) => {
     // Toggle day completion and sync all problems in that day

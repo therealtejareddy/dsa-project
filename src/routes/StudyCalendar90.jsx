@@ -11,8 +11,8 @@ const DAYS = [
     19,
   ]},
   { day: 2, label: 'Stock Trading Problems', problems: [
-    102,
-    104,
+    103,
+    105,
     106,
   ]},
   { day: 3, label: 'Container & Trapping Water', problems: [
@@ -177,7 +177,7 @@ const DAYS = [
 
   // ── TREES - TRAVERSAL (Days 36-40) ───────────────────────────────────────
   { day: 36, label: 'Level Order Traversal', problems: [
-    87,
+    88,
     89,
     147,
   ]},

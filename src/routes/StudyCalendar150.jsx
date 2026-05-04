@@ -2,8 +2,8 @@ import StudyCalendarTemplate from '../components/StudyCalendarTemplate'
 
 const days = [
   { day: 1, label: 'Arrays', problems: [193, 140, 28] },
-  { day: 2, label: 'Arrays', problems: [102, 143, 178] },
-  { day: 3, label: 'Arrays', problems: [104, 316, 212] },
+  { day: 2, label: 'Arrays', problems: [103, 143, 178] },
+  { day: 3, label: 'Arrays', problems: [105, 316, 212] },
   { day: 4, label: 'Arrays & Kadanes', problems: [39, 50, 287] },
   { day: 5, label: 'Kadanes & Strings', problems: [129, 326, 224] },
   { day: 6, label: 'Weekly Revision: Arrays & Strings', problems: [] },
