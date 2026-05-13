@@ -1,4 +1,4 @@
-import { db } from '../config/firebase'
+import { db } from "../config/firebase";
 import {
   doc,
   setDoc,
@@ -8,7 +8,7 @@ import {
   query,
   where,
   getDocs,
-} from 'firebase/firestore'
+} from "firebase/firestore";
 
 /**
  * Save calendar completion status to Firestore
@@ -19,23 +19,27 @@ import {
 export async function saveCalendarStatus(userId, calendarId, completedDays) {
   try {
     if (!db) {
-      console.warn('Firestore not configured. Progress not saved to cloud.')
-      return false
+      console.warn("Firestore not configured. Progress not saved to cloud.");
+      return false;
     }
-    
-    const docRef = doc(db, 'users', userId, 'calendars', calendarId)
-    const completedArray = Array.from(completedDays)
-    
-    await setDoc(docRef, {
-      calendarId,
-      completedDays: completedArray,
-      lastUpdated: new Date().toISOString(),
-    }, { merge: true })
-    
-    return true
+
+    const docRef = doc(db, "users", userId, "calendars", calendarId);
+    const completedArray = Array.from(completedDays);
+
+    await setDoc(
+      docRef,
+      {
+        calendarId,
+        completedDays: completedArray,
+        lastUpdated: new Date().toISOString(),
+      },
+      { merge: true },
+    );
+
+    return true;
   } catch (error) {
-    console.error('Error saving calendar status:', error)
-    return false
+    console.error("Error saving calendar status:", error);
+    return false;
   }
 }
 
@@ -48,21 +52,21 @@ export async function saveCalendarStatus(userId, calendarId, completedDays) {
 export async function getCalendarStatus(userId, calendarId) {
   try {
     if (!db) {
-      return new Set()
+      return new Set();
     }
-    
-    const docRef = doc(db, 'users', userId, 'calendars', calendarId)
-    const docSnap = await getDoc(docRef)
-    
+
+    const docRef = doc(db, "users", userId, "calendars", calendarId);
+    const docSnap = await getDoc(docRef);
+
     if (docSnap.exists()) {
-      const { completedDays = [] } = docSnap.data()
-      return new Set(completedDays)
+      const { completedDays = [] } = docSnap.data();
+      return new Set(completedDays);
     }
-    
-    return new Set()
+
+    return new Set();
   } catch (error) {
-    console.error('Error loading calendar status:', error)
-    return new Set()
+    console.error("Error loading calendar status:", error);
+    return new Set();
   }
 }
 
@@ -74,21 +78,21 @@ export async function getCalendarStatus(userId, calendarId) {
 export async function getAllUserCalendars(userId) {
   try {
     if (!db) {
-      return []
+      return [];
     }
-    
-    const calendarsRef = collection(db, 'users', userId, 'calendars')
-    const querySnapshot = await getDocs(calendarsRef)
-    
-    const calendars = []
+
+    const calendarsRef = collection(db, "users", userId, "calendars");
+    const querySnapshot = await getDocs(calendarsRef);
+
+    const calendars = [];
     querySnapshot.forEach((doc) => {
-      calendars.push(doc.data())
-    })
-    
-    return calendars
+      calendars.push(doc.data());
+    });
+
+    return calendars;
   } catch (error) {
-    console.error('Error loading all calendars:', error)
-    return []
+    console.error("Error loading all calendars:", error);
+    return [];
   }
 }
 
@@ -100,21 +104,25 @@ export async function getAllUserCalendars(userId) {
 export async function updateUserProfile(userId, profileData) {
   try {
     if (!db) {
-      console.warn('Firestore not configured. Profile not updated.')
-      return false
+      console.warn("Firestore not configured. Profile not updated.");
+      return false;
     }
-    
-    const docRef = doc(db, 'users', userId)
-    
-    await setDoc(docRef, {
-      ...profileData,
-      updatedAt: new Date().toISOString(),
-    }, { merge: true })
-    
-    return true
+
+    const docRef = doc(db, "users", userId);
+
+    await setDoc(
+      docRef,
+      {
+        ...profileData,
+        updatedAt: new Date().toISOString(),
+      },
+      { merge: true },
+    );
+
+    return true;
   } catch (error) {
-    console.error('Error updating user profile:', error)
-    return false
+    console.error("Error updating user profile:", error);
+    return false;
   }
 }
 
@@ -125,20 +133,20 @@ export async function updateUserProfile(userId, profileData) {
 export async function getUserProfile(userId) {
   try {
     if (!db) {
-      return null
+      return null;
     }
-    
-    const docRef = doc(db, 'users', userId)
-    const docSnap = await getDoc(docRef)
-    
+
+    const docRef = doc(db, "users", userId);
+    const docSnap = await getDoc(docRef);
+
     if (docSnap.exists()) {
-      return docSnap.data()
+      return docSnap.data();
     }
-    
-    return null
+
+    return null;
   } catch (error) {
-    console.error('Error getting user profile:', error)
-    return null
+    console.error("Error getting user profile:", error);
+    return null;
   }
 }
 
@@ -151,25 +159,35 @@ export async function getUserProfile(userId) {
 export async function saveProblemNote(userId, patternType, problemData) {
   try {
     if (!db || !userId) {
-      console.warn('Firestore not configured or userId missing.')
-      return false
+      console.warn("Firestore not configured or userId missing.");
+      return false;
     }
 
-    const docRef = doc(db, 'users', userId, 'problems', `${patternType}_${problemData.id}`)
-    
-    await setDoc(docRef, {
-      id: problemData.id,
-      title: problemData.title,
-      patternType,
-      userNote: problemData.userNote || '',
-      completed: problemData.completed || false,
-      lastUpdated: new Date().toISOString(),
-    }, { merge: true })
+    const docRef = doc(
+      db,
+      "users",
+      userId,
+      "problems",
+      `${patternType}_${problemData.id}`,
+    );
 
-    return true
+    await setDoc(
+      docRef,
+      {
+        id: problemData.id,
+        title: problemData.title,
+        patternType,
+        userNote: problemData.userNote || "",
+        completed: problemData.completed || false,
+        lastUpdated: new Date().toISOString(),
+      },
+      { merge: true },
+    );
+
+    return true;
   } catch (error) {
-    console.error('Error saving problem note:', error)
-    return false
+    console.error("Error saving problem note:", error);
+    return false;
   }
 }
 
@@ -182,20 +200,70 @@ export async function saveProblemNote(userId, patternType, problemData) {
 export async function getProblemNote(userId, patternType, problemId) {
   try {
     if (!db || !userId) {
-      return null
+      return null;
     }
 
-    const docRef = doc(db, 'users', userId, 'problems', `${patternType}_${problemId}`)
-    const docSnap = await getDoc(docRef)
+    const docRef = doc(
+      db,
+      "users",
+      userId,
+      "problems",
+      `${patternType}_${problemId}`,
+    );
+    const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      return docSnap.data()
+      return docSnap.data();
     }
 
-    return null
+    return null;
   } catch (error) {
-    console.error('Error loading problem note:', error)
-    return null
+    console.error("Error loading problem note:", error);
+    return null;
+  }
+}
+
+/**
+ * Update only the completed status of a problem in Firestore
+ * @param {string} userId - The user's ID
+ * @param {string} patternType - Pattern type (e.g., 'fixed', 'dynamic')
+ * @param {string} problemId - Problem ID
+ * @param {boolean} completed - Whether the problem is completed
+ */
+export async function updateProblemCompleted(
+  userId,
+  patternType,
+  problemId,
+  completed,
+) {
+  try {
+    if (!db || !userId) {
+      console.warn("Firestore not configured or userId missing.");
+      return false;
+    }
+
+    const docRef = doc(
+      db,
+      "users",
+      userId,
+      "problems",
+      `${patternType}_${problemId}`,
+    );
+    await setDoc(
+      docRef,
+      {
+        id: problemId,
+        patternType,
+        completed,
+        lastUpdated: new Date().toISOString(),
+      },
+      { merge: true },
+    );
+
+    return true;
+  } catch (error) {
+    console.error("Error updating problem completed status:", error);
+    return false;
   }
 }
 
@@ -207,22 +275,22 @@ export async function getProblemNote(userId, patternType, problemId) {
 export async function getPatternProblems(userId, patternType) {
   try {
     if (!db || !userId) {
-      return []
+      return [];
     }
 
-    const problemsRef = collection(db, 'users', userId, 'problems')
-    const q = query(problemsRef, where('patternType', '==', patternType))
-    const querySnapshot = await getDocs(q)
+    const problemsRef = collection(db, "users", userId, "problems");
+    const q = query(problemsRef, where("patternType", "==", patternType));
+    const querySnapshot = await getDocs(q);
 
-    const problems = []
+    const problems = [];
     querySnapshot.forEach((doc) => {
-      problems.push(doc.data())
-    })
+      problems.push(doc.data());
+    });
 
-    return problems
+    return problems;
   } catch (error) {
-    console.error('Error loading pattern problems:', error)
-    return []
+    console.error("Error loading pattern problems:", error);
+    return [];
   }
 }
 
@@ -232,16 +300,20 @@ export async function getPatternProblems(userId, patternType) {
  */
 export async function saveCompletedProblems(userId, completedProblems) {
   try {
-    if (!db) return false
-    const docRef = doc(db, 'users', userId, 'progress', 'problems')
-    await setDoc(docRef, {
-      completedIds: Array.from(completedProblems),
-      lastUpdated: new Date().toISOString(),
-    }, { merge: true })
-    return true
+    if (!db) return false;
+    const docRef = doc(db, "users", userId, "progress", "problems");
+    await setDoc(
+      docRef,
+      {
+        completedIds: Array.from(completedProblems),
+        lastUpdated: new Date().toISOString(),
+      },
+      { merge: true },
+    );
+    return true;
   } catch (error) {
-    console.error('Error saving completed problems:', error)
-    return false
+    console.error("Error saving completed problems:", error);
+    return false;
   }
 }
 
@@ -250,16 +322,16 @@ export async function saveCompletedProblems(userId, completedProblems) {
  */
 export async function getCompletedProblems(userId) {
   try {
-    if (!db) return new Set()
-    const docRef = doc(db, 'users', userId, 'progress', 'problems')
-    const snap = await getDoc(docRef)
+    if (!db) return new Set();
+    const docRef = doc(db, "users", userId, "progress", "problems");
+    const snap = await getDoc(docRef);
     if (snap.exists()) {
-      return new Set(snap.data().completedIds ?? [])
+      return new Set(snap.data().completedIds ?? []);
     }
-    return new Set()
+    return new Set();
   } catch (error) {
-    console.error('Error loading completed problems:', error)
-    return new Set()
+    console.error("Error loading completed problems:", error);
+    return new Set();
   }
 }
 
@@ -270,25 +342,29 @@ export async function getCompletedProblems(userId) {
 export async function saveSystemDesignData(userId, calendarId, data) {
   try {
     if (!db || !userId) {
-      console.warn('Firestore not configured.')
-      return false
+      console.warn("Firestore not configured.");
+      return false;
     }
 
-    const docRef = doc(db, 'users', userId, 'systemDesign', calendarId)
-    
-    await setDoc(docRef, {
-      calendarId,
-      dayNotes: data.dayNotes || {},
-      topicNotes: data.topicNotes || {},
-      completedTopics: Array.from(data.completedTopics || []),
-      completedDays: Array.from(data.completedDays || []),
-      lastUpdated: new Date().toISOString(),
-    }, { merge: true })
+    const docRef = doc(db, "users", userId, "systemDesign", calendarId);
 
-    return true
+    await setDoc(
+      docRef,
+      {
+        calendarId,
+        dayNotes: data.dayNotes || {},
+        topicNotes: data.topicNotes || {},
+        completedTopics: Array.from(data.completedTopics || []),
+        completedDays: Array.from(data.completedDays || []),
+        lastUpdated: new Date().toISOString(),
+      },
+      { merge: true },
+    );
+
+    return true;
   } catch (error) {
-    console.error('Error saving system design data:', error)
-    return false
+    console.error("Error saving system design data:", error);
+    return false;
   }
 }
 
@@ -303,20 +379,20 @@ export async function getSystemDesignData(userId, calendarId) {
         topicNotes: {},
         completedTopics: new Set(),
         completedDays: new Set(),
-      }
+      };
     }
 
-    const docRef = doc(db, 'users', userId, 'systemDesign', calendarId)
-    const docSnap = await getDoc(docRef)
+    const docRef = doc(db, "users", userId, "systemDesign", calendarId);
+    const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-      const data = docSnap.data()
+      const data = docSnap.data();
       return {
         dayNotes: data.dayNotes || {},
         topicNotes: data.topicNotes || {},
         completedTopics: new Set(data.completedTopics || []),
         completedDays: new Set(data.completedDays || []),
-      }
+      };
     }
 
     return {
@@ -324,14 +400,14 @@ export async function getSystemDesignData(userId, calendarId) {
       topicNotes: {},
       completedTopics: new Set(),
       completedDays: new Set(),
-    }
+    };
   } catch (error) {
-    console.error('Error loading system design data:', error)
+    console.error("Error loading system design data:", error);
     return {
       dayNotes: {},
       topicNotes: {},
       completedTopics: new Set(),
       completedDays: new Set(),
-    }
+    };
   }
 }
