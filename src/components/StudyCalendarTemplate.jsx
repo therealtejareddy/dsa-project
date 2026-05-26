@@ -160,6 +160,7 @@ export default function StudyCalendarTemplate({
   const [dayNoteText, setDayNoteText] = useState("");
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const { user } = useContext(AuthContext);
+  const problemKey = (id) => String(id);
 
   // Load calendar status from Firestore when component mounts or user changes
   useEffect(() => {
@@ -176,7 +177,17 @@ export default function StudyCalendarTemplate({
               getPatternProblems(user.uid, "dayNotes"),
             ]);
           setCompletedDays(savedDays);
-          setCompletedProblems(savedProblems);
+          const completedFromProgress = new Set(
+            Array.from(savedProblems).map((id) => problemKey(id)),
+          );
+          const completedFromCalendarDocs = new Set(
+            allProblemNotes
+              .filter((pn) => pn.completed === true)
+              .map((pn) => problemKey(pn.id)),
+          );
+          setCompletedProblems(
+            new Set([...completedFromProgress, ...completedFromCalendarDocs]),
+          );
           // Convert problem notes array to object format (already filtered by calendar via patternType)
           const problemNotesObj = {};
           allProblemNotes.forEach((pn) => {
@@ -201,6 +212,9 @@ export default function StudyCalendarTemplate({
         }
       } else {
         setCompletedDays(new Set());
+        setCompletedProblems(new Set());
+        setProblemNotes({});
+        setDayNotes({});
         setLoading(false);
         setIsInitialLoad(false);
       }
@@ -237,25 +251,24 @@ export default function StudyCalendarTemplate({
 
   const toggleProblemComplete = (problemId) => {
     // Simply toggle this problem, don't cascade to other problems in the day
+    const idKey = problemKey(problemId);
+    let newCompleted = false;
     setCompletedProblems((prev) => {
       const next = new Set(prev);
-      const newCompleted = !next.has(problemId);
+      newCompleted = !next.has(idKey);
       if (newCompleted) {
-        next.add(problemId);
+        next.add(idKey);
       } else {
-        next.delete(problemId);
-      }
-      // Persist completed status immediately to Firestore
-      if (user) {
-        updateProblemCompleted(
-          user.uid,
-          "calendar",
-          String(problemId),
-          newCompleted,
-        ).catch((e) => console.error("Failed to update problem completed:", e));
+        next.delete(idKey);
       }
       return next;
     });
+    // Persist completed status immediately to Firestore
+    if (user) {
+      updateProblemCompleted(user.uid, "calendar", idKey, newCompleted).catch(
+        (e) => console.error("Failed to update problem completed:", e),
+      );
+    }
   };
 
   // Auto-mark day as complete if all its problems are completed
@@ -270,7 +283,7 @@ export default function StudyCalendarTemplate({
         if (day.problems.length === 0) continue;
 
         const allProblemsInDayDone = day.problems.every((p) =>
-          completedProblems.has(p.id),
+          completedProblems.has(problemKey(p.id)),
         );
         if (allProblemsInDayDone) {
           nextDays.add(day.day);
@@ -302,7 +315,7 @@ export default function StudyCalendarTemplate({
     setCompletedProblems((prev) => {
       const next = new Set(prev);
       if (willMarkDay) {
-        dayEntry.problems.forEach((p) => next.add(p.id));
+        dayEntry.problems.forEach((p) => next.add(problemKey(p.id)));
       }
       // Don't unmark problems when unmarking the day
       return next;
@@ -325,7 +338,7 @@ export default function StudyCalendarTemplate({
         id: editingNoteId,
         title: editingNoteId,
         userNote: noteText,
-        completed: completedProblems.has(editingNoteId),
+        completed: completedProblems.has(problemKey(editingNoteId)),
       }).catch((e) => console.error("Failed to save problem note:", e));
     }
     setEditingNoteId(null);
@@ -374,7 +387,8 @@ export default function StudyCalendarTemplate({
     { label: "Remaining", value: totalDays - completedCount, color: "#fbbf24" },
     {
       label: "Problems Done",
-      value: allProblems.filter((p) => completedProblems.has(p.id)).length,
+      value: allProblems.filter((p) => completedProblems.has(problemKey(p.id)))
+        .length,
       color: "#a78bfa",
     },
     {
@@ -718,13 +732,15 @@ export default function StudyCalendarTemplate({
                           >
                             <span
                               style={{
-                                color: completedProblems.has(p.id)
+                                color: completedProblems.has(problemKey(p.id))
                                   ? "#34d399"
                                   : DIFF_COLOR[p.difficulty]?.color,
                                 marginRight: 2,
                               }}
                             >
-                              {completedProblems.has(p.id) ? "✓" : "●"}
+                              {completedProblems.has(problemKey(p.id))
+                                ? "✓"
+                                : "●"}
                             </span>
                             {p.title}
                           </div>
@@ -862,7 +878,9 @@ export default function StudyCalendarTemplate({
                       const diffColor = DIFF_COLOR[p.difficulty];
                       const problemKey = String(p.id);
                       const hasNote = problemNotes[problemKey];
-                      const isProblemDone = completedProblems.has(p.id);
+                      const isProblemDone = completedProblems.has(
+                        problemKey(p.id),
+                      );
                       return (
                         <div
                           key={i}
